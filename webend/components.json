@@ -1,0 +1,143 @@
+[
+    {
+        "type": "linesensor",
+        "properties": {
+            "pin": "int"
+        }
+    },
+    {
+        "type": "linesensor_array",
+        "properties": {
+            "digital": "bool",
+            "num_samples": "int",
+            "emitter_pin": "int",
+            "pin_list": "int[6]"
+        }
+    },
+    {
+        "type": "ultrasonic",
+        "properties": {
+            "pin": "int"
+        }
+
+    },
+    {
+        "type": "switch",
+        "properties": {
+            "pin": "int",
+            "pullup": "bool",
+            "invert": "bool"
+        }
+
+    },
+    {
+        "type": "limit_switch",
+        "properties": {
+            "pin": "int",
+            "pullup": "bool",
+            "invert": "bool"
+        }
+    },
+    {
+        "type": "button",
+        "properties": {
+            "pin": "int",
+            "pullup": "bool",
+            "invert": "bool"
+        }
+    },
+    {
+        "type": "i2cencoder",
+        "properties": {
+            "reverse": "bool",
+            "init_number": "int"
+        }
+
+    },
+    {
+        "type": "encoder",
+        "properties": {
+            "pinA": "int",
+            "pinB": "int",
+	       "reverse": "bool"
+        }
+
+    },
+    {
+        "type": "servo",
+        "properties": {
+            "pin": "int"
+        }
+
+    },
+    {
+        "type": "stepper",
+        "properties": {
+            "steps": "int",
+            "pinA": "int",
+            "pinB": "int",
+            "pinC": "int",
+            "pinD": "int",
+            "initial_speed": "int"
+        }
+    },
+    {
+        "type": "monsterMotoMotor",
+        "properties": {
+            "inA_pin": "int",
+            "inB_pin": "int",
+            "pwm_pin": "int",
+            "reverse": "bool"
+        }
+
+    },
+    {
+        "type": "roverFiveMotor",
+        "properties": {
+            "dir_pin": "int",
+            "pwm_pin": "int",
+            "reverse": "bool"
+        }
+    },
+    {
+        "type": "pid",
+        "properties": {
+            "kp": "double",
+            "ki": "double",
+            "kd": "double",
+            "minOutput": "double",
+            "maxOutput": "double",
+            "reverse": "bool",
+            "vpid": "bool"
+        }
+    },
+    {
+        "type": "velocityControlledMotor",
+        "properties": {
+            "motor_label": "string",
+            "encoder_label": "string",
+            "vpid_label": "string"
+        }
+    },
+    {
+        "type": "arm",
+        "properties": {
+            "base_label": "string",
+            "shoulder_label": "string",
+            "elbow_label": "string",
+            "wrist_label": "string",
+            "wrist_rotate_label": "string"
+        }
+
+    },
+    {
+        "type": "fourWheelDriveBase",
+        "properties": {
+            "useVelocityControl": "bool",
+            "leftFrontDriveMotor": "string",
+            "rightFrontDriveMotor": "string",
+            "leftBackDriveMotor": "string",
+            "rightBackDriveMotor": "string"
+        }
+    }
+]

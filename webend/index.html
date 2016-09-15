@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>2017 Arduino Code Generator - IEEE - UTK</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+    <style type="text/css">
+        /* show the move cursor as the user moves the mouse over the panel header.*/
+        #draggablePanelList .panel-heading {
+            cursor: move;
+        }
+
+        #components .panel-body {
+            display: none;
+        }
+
+        pre {
+            white-space: pre-wrap;
+        }
+
+        .panel-heading .btn-danger {
+            padding: 0px;
+            width: 57px;
+            height: 57px;
+            margin-top: -11px;
+            margin-right: -16px;
+            margin-bottom: -11px;
+            float: right;
+            font-size: 25px;
+        }
+
+        .panel-heading .btn-danger span {
+            vertical-align: -4px;
+        }
+
+        #components .panel-heading .btn-danger {
+            visibility: hidden;
+        }
+
+        .affix {
+            top: 60px;
+        }
+    </style>
+</head>
+<body style="padding-top: 50px; position: relative;">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">IEEE Robotics - UTK</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="../index.html">Robot Status</a></li>
+  				    <li class="active"><a href="index.html">Arduino Code Generator</a></li>
+                    <li><a href="../Pathfinder/index.html">Pathfinder</a></li>
+                    <li><a href="https://www.flowdock.com/app/utk-robotics-2016/utk-robotics-2016">Flowdock</a></li>
+                    <li><a href="https://github.com/utk-robotics-2017/">GitHub</a></li>
+                    <li><a href="https://trello.com/b/KiLjYrul">Trello Board</a></li>
+                    <li><a href="http://com1568.eecs.utk.edu/">Wiki</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <header style="margin-bottom: 20px;">
+            <h1>Arduino Code Generator</h1>
+        </header>
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="input-group" id="deviceGroup">
+                    <span class="input-group-addon">Device</span>
+                    <select class="form-control" id="deviceList">
+                        <option value=""></option>
+                        <option value="216.96.173.179:9000">Blu Bot</option>
+                        <option value="127.0.0.1:9000">Whatever is on 127.0.0.1:9000</option>
+                    </select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="deviceSubmit">Connect</button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-9" style="display: none;">
+                <div class="alert alert-danger" id="errorConnect" style="padding: 6px 20px 6px 12px;">
+                    Error Connecting. Ensure the server is on and try accepting the <a>certificate</a>.
+                    <button type="button" class="close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-3" style="display: none;">
+                <div class="input-group" id="pinGroup">
+                    <span class="input-group-addon">Pin</span>
+                    <input type="text" class="form-control" id="pinInput" disabled />
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="pinSubmit" disabled>Submit</button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-3" style="display: none;">
+                <div class="input-group" id="lockGroup">
+                    <span class="input-group-addon" id="lockLabel">Lock</span>
+                    <select class="form-control" id="lockList" disabled></select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button" id="lockSubmit" disabled>Lock</button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-6" id="componentButtons" style="display: none;">
+                <button class="btn btn-primary" type="button" id="getComponents" disabled>Get Components</button>
+                <button class="btn btn-primary" type="button" id="postComponents" disabled>Post Components</button>
+                <button class="btn btn-primary" type="button" id="genCode" disabled>Generate Code</button>
+                <button class="btn btn-primary" type="button" id="writeComponents" disabled>Write Components</button>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-default" data-spy="affix" data-offset-top="124" data-offset-bottom="0" id="myListPanel">
+                    <div class="panel-heading">My List</div>
+                    <div class="panel-body">
+                        <ol class="list-unstyled" id="myList">
+                            <li id="placeholder" class="placeholder"><div class="well clear-fix"><h1 class="text-center" style="color: #777;">Drag Components Here</h1></div></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-default" id="componentsPanel">
+                    <div class="panel-heading">Components</div>
+                    <div class="panel-body">
+                        <ul class="list-unstyled" id="components"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Output JSON</div>
+                    <div class="panel-body"><pre class="well" id="output"></pre></div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Output JSON Minified</div>
+                    <div class="panel-body"><pre class="well" id="outputMin"></pre></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">Input JSON</div>
+                    <div class="panel-body"><textarea id="input" rows="10" class="form-control"></textarea></div>
+                    <div class="panel-footer"><button id="inputSubmit" class="btn btn-primary">Submit</button></div>
+                </div>
+            </div>
+        </div>
+        -->
+    </div>
+    <hr />
+    <footer class="container">
+        <p>&copy; 2016 - UTK IEEE Robotics Team</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+    <script>
+        var components = null;
+        var lockedDevice = null;
+        var ws = null;
+
+        function getJson() {
+            var oList = [];
+
+            var myList = $("#myList > li").not(".placeholder");
+
+            function getVal(jqObj, dataType) {
+                if (dataType == "bool")
+                    return $(jqObj).is(":checked");
+                else if (dataType == "int")
+                    return parseInt($(jqObj).val());
+                else if (dataType == "double")
+                    return parseFloat($(jqObj).val());
+                else if (dataType == "string")
+                    return $(jqObj).val();
+            }
+
+            for (var i = 0; i < myList.length; i++) {
+                var obj = {};
+
+                var listHeaders = $(".panel-heading > div", myList[i]);
+
+                var label = $("input", listHeaders[0]).val();
+                obj["label"] = label;
+                var type = $(listHeaders[1]).text();
+                obj["type"] = type;
+
+                var properties = $(".panel-body li", myList[i]);
+                for (var j = 0; j < properties.length; j++) {
+                    var propName = $("label", properties[j]).text().slice(0, -1);
+
+                    var propVal = $("input", properties[j]);
+                    var dataType = $(propVal).data("type");
+                    var dtr = (/(\w+)\[(\d+)\]/g).exec(dataType);
+
+                    if (dtr != null) {
+                        var arr = [];
+                        for (var k = 0; k < parseInt(dtr[2]) ; k++)
+                            arr.push(getVal($("input", properties[j + k]), dtr[1]));
+                        obj[propName] = arr;
+                        j += parseInt(dtr[2]);
+                    }
+                    else
+                        obj[propName] = getVal(propVal, dataType);
+                }
+
+                oList.push(obj);
+            }
+
+            return oList;
+        }
+
+        function updateOutput() {
+            var componentsJson = getJson();
+            $("#output").text(JSON.stringify(componentsJson, null, "    "));
+            $("#outputMin").text(JSON.stringify(componentsJson));
+        }
+
+        function populateComponents(json, disable, ulId) {
+            var panelStrClean = '' +
+                '<li class="panel panel-primary" data-type="{type}">' +
+                    '<div class="panel-heading clearfix">' +
+                        '<div style="float: left;" class="col-lg-6">' +
+                            '<input class="form-control" type="text" value="{label}" placeholder="Label" {disabled}/>' +
+                        '</div>' +
+                        '<button class="btn btn-danger" style="float: right;"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+                        '<div style="float: right; height: 20px; padding: 7px; font-size: 15px;">{type}</div>' +
+                        '</div>' +
+                    '<div class="panel-body">' +
+                        '<ul class="list-unstyled form-horizontal"></ul>' +
+                    '</div>' +
+                '</li>';
+
+            var inputStrClean = '' +
+                '<li class="form-group">' +
+                    '<label class="control-label col-lg-4">{varName}:</label>' +
+                    '<div class="col-lg-{colWidth} clearfix">' +
+                        '<input {inputOptions} class="form-control" value="{value}" data-type="{dataType}" {disabled}>' +
+                    '</div>' +
+                '</li>';
+
+            var inputArrayStrClean = '' +
+                '<li class="form-group">' +
+                    '<label class="control-label col-lg-4">{varName}</label>' +
+                    '<div class="col-lg-{colWidth} clearfix">' +
+                        '<div class="input-group">' +
+                            '<span class="input-group-addon">{index}</span>' +
+                            '<input {inputOptions} class="form-control" value="{value}" data-type="{dataType}" {disabled}>' +
+                            //'<div class="input-group-btn">' +
+                            '<input {inputOptions} class="form-control" value="{value}" data-type="{dataType}" {disabled}>' +
+                            //'<div class="input-group-btn">' +
+                            //      '<button class="btn btn-danger">&times;</button>' +
+                            //      '<button class="btn btn-success">&plus;</button>' +
+                            //'</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</li>';
+
+            function makeInput(inputStr, varName, dataType, disable, value) {
+                if (dataType == "bool")
+                    inputStr = inputStr.replace(/{varName}/g, varName).replace(/{colWidth}/g, '2').replace(/{inputOptions}/g, 'type="checkbox" {checkbox}');
+                else if (dataType == "int")
+                    inputStr = inputStr.replace(/{varName}/g, varName).replace(/{colWidth}/g, '8').replace(/{inputOptions}/g, 'type="number" min="0" step="1" placeholder="int"');
+                else if (dataType == "double")
+                    inputStr = inputStr.replace(/{varName}/g, varName).replace(/{colWidth}/g, '8').replace(/{inputOptions}/g, 'type="number" step="any" placeholder="double"');
+                else if (dataType == "string")
+                    inputStr = inputStr.replace(/{varName}/g, varName).replace(/{colWidth}/g, '8').replace(/{inputOptions}/g, 'type="text" placeholder="string"');
+
+                if (disable)
+                    inputStr = inputStr.replace(/{disabled}/g, 'disabled');
+                else
+                    inputStr = inputStr.replace(/{disabled}/g, '');
+
+                if (value != null) {
+                    if (dataType == "bool")
+                        inputStr = inputStr.replace(/{value}/g, '').replace(/{checkbox}/g, (value) ? 'checked' : '');
+                    else
+                        inputStr = inputStr.replace(/{value}/g, value);
+                }
+                else
+                    inputStr = inputStr.replace(/{value}/g, '');
+
+                return inputStr;
+            }
+
+            for (var i = 0; i < json.length; i++) {
+                var panelStr = panelStrClean.replace(/{type}/g, json[i]["type"]);
+
+                if (json[i].hasOwnProperty('label'))
+                    panelStr = panelStr.replace(/{label}/g, json[i]["label"]);
+                else
+                    panelStr = panelStr.replace(/{label}/g, json[i]["type"]);
+
+                if (disable)
+                    panelStr = panelStr.replace(/{disabled}/g, 'disabled');
+                else
+                    panelStr = panelStr.replace(/{disabled}/g, '');
+
+                var panel = $(panelStr);
+
+                for (var prop in json[i]["properties"]) {
+                    if (json[i]["properties"].hasOwnProperty(prop)) {
+                        var dataType = json[i]["properties"][prop];
+                        var dtr = (/(\w+)\[(\d+)\]/g).exec(dataType);
+                        var inputStr = "";
+
+                        if (dtr != null)
+                            for (var j = 0; j < parseInt(dtr[2]) ; j++)
+                                inputStr += makeInput(inputArrayStrClean, (j == 0) ? prop + ":" : "&nbsp;", dtr[1], disable, json[i].hasOwnProperty(prop) ? json[i][prop][j] : null).replace(/{index}/g, j);
+                        else
+                            inputStr = makeInput(inputStrClean, prop, json[i]["properties"][prop], disable, json[i].hasOwnProperty(prop) ? json[i][prop] : null);
+
+                        inputStr = inputStr.replace(/{dataType}/g, dataType);
+                        $("ul", panel).append(inputStr);
+                    }
+                }
+
+                $(ulId).append(panel);
+            }
+        }
+
+        function runCmd(cmd, input, func) {
+            if (input.substring(0, cmd.length) == cmd) {
+                func(input.substring(cmd.length));
+                return true;
+            }
+            else
+                return false;
+        }
+
+        $(function () {
+            $("#myListPanel").css("width", $("#componentsPanel").css("width"));
+
+            $(window).scroll(function() {
+                if ($("#myListPanel").css("position") != null)
+                    $("#myListPanel").css("top", "0px");
+            });
+
+            updateOutput();
+
+            $("#myList").sortable({
+                revert: true,
+                beforeStop: function (event, ui) {
+                    ui.item.css("width", "");
+                    ui.item.css("height", "");
+                    $("input[disabled]", ui.item).removeAttr("disabled");
+                },
+                stop: function (event, ui) {
+                    updateOutput();
+                    $("#myList input").on('input', function () {
+                        updateOutput();
+                    });
+                    $("#myList input:checkbox").change(function () {
+                        updateOutput();
+                    });
+                    $(".placeholder").hide();
+                },
+                over: function() {
+                    $(".placeholder").hide();
+                },
+                out: function() {
+                    var arr = $("#myList").sortable("toArray");
+                    arr.splice(arr.indexOf("placeholder"), 1);
+                    if (arr.length == 0)
+                        $(".placeholder").show();
+                }
+            });
+
+            $.getJSON("components.json", function (json) {
+                components = json;
+
+                populateComponents(components, true, "#components");
+
+                $("#components .panel").draggable({
+                    connectToSortable: "#myList",
+                    helper: "clone",
+                    start: function (event, ui) {
+                        ui.helper.width($(this).width());
+                    }
+                });
+            });
+
+            $("#myList").on("click", ".panel-heading .btn-danger", function() {
+                $(this).closest("li").remove();
+                if ($("#myList li:not(.placeholder)").length == 0)
+                    $(".placeholder").show();
+            });
+
+            $("#errorConnect .close").click(function() {
+                $("#errorConnect").parent().hide();
+            });
+
+            $("#inputSubmit").click(function () {
+                var json = [];
+                if ($("#input").val() != "")
+                    json = JSON.parse($("#input").val());
+
+                $("#myList").empty().sortable("refresh");
+
+                for (var i = 0; i < json.length; i++) {
+                    console.log(json[i]["type"]);
+                    json[i]["properties"] = components.filter(function (comp) { return comp["type"] == json[i]["type"] })[0]["properties"];
+                }
+
+                populateComponents(json, false, "#myList");
+
+                updateOutput();
+            });
+
+            $("#deviceSubmit").click(function () {
+                if (ws == null) {
+                    ws = new WebSocket("wss://" + $("#deviceList").val() + "/");
+                    ws.onerror = function(event) {
+                        console.log(event);
+                        $("#errorConnect a").prop("href", "https://" + $("#deviceList").val() + "/setuptls");
+                        $("#errorConnect").parent().show();
+                    };
+                    ws.onopen = function () {
+                        $("#deviceGroup").addClass("has-success");
+                        $("#deviceList").prop("disabled", true);
+                        $("#deviceSubmit").text("Disconnect").addClass("btn-danger");
+
+                        $("#pinGroup").parent().show("slide", null, 400, function () {
+                            $("#pinInput").prop("disabled", false);
+                            $("#pinSubmit").prop("disabled", false);
+                        });
+                    };
+                    ws.onclose = function () {
+                        $("#deviceGroup").removeClass("has-success");
+                        $("#deviceList").prop("disabled", false);
+                        $("#deviceSubmit").text("Connect").removeClass("btn-danger").addClass("btn-primary");
+
+                        $("#pinGroup").parent().css("display", "none");
+                        $("#pinGroup").removeClass("has-success");
+                        $("#pinInput").prop("disabled", true).val("");
+                        $("#pinSubmit").prop("disabled", true);
+
+                        $("#lockGroup").parent().css("display", "none");
+                        $("#lockGroup").removeClass("has-success");
+                        $("#lockList").prop("disabled", true).html("");
+                        $("#lockSubmit").prop("disabled", true);
+                        $("#lockSubmit").text("Lock").removeClass("btn-danger").addClass("btn-primary");
+
+                        $("#componentButtons button").prop("disabled", true);
+                        $("#componentButtons").css("display", "none");
+
+                        lockedDevice = null;
+                    };
+                    ws.onmessage = function (event) {
+                        var message = event.data;
+                        $("#wsOutput").append("<span>" + message + "</span><br />");
+
+                        if (runCmd("Verified", message, function (input) {
+                            verified = true;
+
+                            $("#pinGroup").addClass("has-success");
+
+                            $("#pinSubmit").prop("disabled", true);
+                            $("#pinInput").prop("disabled", true);
+
+                            $("#pinGroup").parent().hide("slide", null, 400, function () {
+                                $("#lockGroup").parent().show("slide", null, 400, function () {
+                                    $("#lockList").prop("disabled", false);
+                                    $("#lockSubmit").prop("disabled", false);
+                                });
+                            });
+                        })) { return; }
+
+                        if (runCmd("DeviceList", message, function (input) {
+                            var devices = JSON.parse(input);
+                            $("#lockList").html("");
+
+                            for (var i = 0; i < devices.length; i++) {
+                                var dev = devices[i];
+
+                                var devSelect = "<option value='" + dev["name"] + "'";
+                                if (dev["locked"])
+                                    devSelect += " disabled";
+                                if (lockedDevice != null && dev["name"] == lockedDevice)
+                                    devSelect += " selected";
+                                devSelect += ">" + dev["name"] + "</option>";
+                                $("#lockList").append(devSelect);
+                            }
+                        })) { return; }
+
+                        if (runCmd("LockedDevice", message, function (input) {
+                            $("#lockGroup").addClass("has-success");
+
+                            $("#lockList").prop("disabled", true);
+                            $("#lockList").val(input);
+                            lockedDevice = input;
+
+                            $("#lockLabel").text("Locked");
+                            $("#lockSubmit").text("Unlock").removeClass("btn-primary").addClass("btn-danger");
+
+                            $("#componentButtons").show("slide", null, 400, function () {
+                                $("#componentButtons button").prop("disabled", false);
+                            });
+                        })) { return; }
+
+                        if (runCmd("UnlockedDevice", message, function (input) {
+                            lockedDevice = null;
+
+                            $("#componentButtons button").prop("disabled", true);
+                            $("#componentButtons").hide("slide", null, 400, function () {
+                                $("#lockGroup").removeClass("has-success");
+                                $("#lockLabel").text("Lock");
+                                $("#lockList").prop("disabled", false);
+                                $("#lockSubmit").text("Lock").removeClass("btn-danger").addClass("btn-primary");
+                            });
+                        })) { return; }
+
+                        if (runCmd("ComponentList", message, function (input) {
+                            var json = JSON.parse(input);
+
+                            $("#myList li:not(.placeholder)").remove()
+                            $("#myList").sortable("refresh");
+
+                            if (json.length == 0)
+                                $(".placeholder").show();
+                            else
+                                $(".placeholder").hide();
+
+                            for (var i = 0; i < json.length; i++)
+                                json[i]["properties"] = components.filter(function (comp) { return comp["type"] == json[i]["type"] })[0]["properties"];
+
+                            populateComponents(json, false, "#myList");
+                            updateOutput();
+                        })) { return; }
+
+                        if (runCmd("DeviceInUse", message, function (input) {
+                        })) { return; }
+
+                        if (runCmd("DeviceNotRegistered", message, function (input) {
+                        })) { return; }
+                    };
+                }
+                else {
+                    ws.close();
+                    ws = null;
+                }
+            });
+
+            $("#pinSubmit").click(function () {
+                var pin = $("#pinInput").val();
+
+                ws.send(pin);
+            });
+
+            $("#lockSubmit").click(function () {
+                var text = $("#lockSubmit").text();
+                if (text == "Lock") {
+                    var device = $("#lockList").val();
+                    requestedDevice = device;
+
+                    ws.send("Lock" + device);
+                } else if (text == "Unlock") {
+                    ws.send("Unlock");
+                }
+            });
+
+            $("#getComponents").click(function () {
+                ws.send("GetComponents");
+            });
+
+            $("#postComponents").click(function () {
+                ws.send("PostComponents" + JSON.stringify(getJson()));
+            });
+
+            $("#genCode").click(function() {
+                ws.send("GenCode" + JSON.stringify(getJson()));
+            });
+
+            $("#writeComponents").click(function () {
+                ws.send("WriteComponents" + JSON.stringify(getJson()));
+            });
+        });
+    </script>
+</body>
+</html>
