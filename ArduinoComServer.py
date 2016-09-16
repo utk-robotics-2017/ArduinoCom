@@ -72,7 +72,7 @@ class arduinoCom(tornado.websocket.WebSocketHandler):
 
         else:
             # The user is verified.
-            self.write_message("You are currently verified.")
+            self.write_message("You entered this command: " + cmd)
         ''' # Code from ArduinoGen, not for ArduinoCom
             cmd = "Lock"
             if message[:len(cmd)] == cmd:
