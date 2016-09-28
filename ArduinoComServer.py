@@ -20,15 +20,12 @@ clients = set()
 clientId = 0
 
 port = 9000
-'''
-# More arduinogen old stuff
-#currentArduinoCodeFolder = "/Robot/CurrentArduinoCode"
-#confFolder = "./conf"
-#lockFolder = "/var/lock"
-'''
+
+# Now ensures that the pin is always 5 numbers.
 pin = random.randint(10000, 99999)
 
 
+# Generic log function for timestamping
 def log(wsId, message):
     print(("{}\tClient {:2d}\t{}".format(
         time.strftime("%H:%M:%S", time.localtime()), wsId, message
@@ -36,9 +33,11 @@ def log(wsId, message):
 
 
 class arduinoCom(tornado.websocket.WebSocketHandler):
+    # Not sure what this does...
     def check_origin(self, origin):
         return True
 
+    # Opens a new connection for a client, and adds it to our clients.
     def open(self):
         global clients, clientId
 
@@ -50,17 +49,18 @@ class arduinoCom(tornado.websocket.WebSocketHandler):
 
         log(self.id, "connected with ip: " + self.request.remote_ip)
 
+    # Main function for all incoming data and messages,
     def on_message(self, message):
         if not self.verified:
             # User is not verified, try to verify using a PIN.
             try:
                 clientPin = int(message)
-            except ValueError:
+            except ValueError:  # Wrong PIN,
                 self.write_message("Invalid Pin")
                 log(self.id, "entered an invalid pin: " + message)
                 return
 
-            if clientPin == pin:
+            if clientPin == pin:  # Client pin matches
                 self.verified = True
                 self.write_message("Verified")
                 log(self.id, "entered correct pin")
@@ -70,8 +70,8 @@ class arduinoCom(tornado.websocket.WebSocketHandler):
 
             self.write_message("Verified")
 
-        else:
-            # The user is verified.
+        else:  # This means the user is verified.
+            # TODO things
             self.write_message("You entered this command: " + cmd)
         ''' # Code from ArduinoGen, not for ArduinoCom
             cmd = "Lock"
