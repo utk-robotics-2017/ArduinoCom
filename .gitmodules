@@ -1,0 +1,3 @@
+[submodule "PyCmdMessenger"]
+	path = PyCmdMessenger
+	url = https://github.com/utk-robotics-2017/PyCmdMessenger.git
