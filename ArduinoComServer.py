@@ -20,15 +20,12 @@ clients = set()
 clientId = 0
 
 port = 9000
-'''
-# More arduinogen old stuff
-#currentArduinoCodeFolder = "/Robot/CurrentArduinoCode"
-#confFolder = "./conf"
-#lockFolder = "/var/lock"
-'''
+
+# Now ensures that the pin is always 5 numbers.
 pin = random.randint(10000, 99999)
 
 
+# Generic log function for timestamping
 def log(wsId, message):
     print(("{}\tClient {:2d}\t{}".format(
         time.strftime("%H:%M:%S", time.localtime()), wsId, message
@@ -36,9 +33,11 @@ def log(wsId, message):
 
 
 class arduinoCom(tornado.websocket.WebSocketHandler):
+    # Not sure what this does...
     def check_origin(self, origin):
         return True
 
+    # Opens a new connection for a client, and adds it to our clients.
     def open(self):
         global clients, clientId
 
@@ -50,17 +49,18 @@ class arduinoCom(tornado.websocket.WebSocketHandler):
 
         log(self.id, "connected with ip: " + self.request.remote_ip)
 
+    # Main function for all incoming data and messages,
     def on_message(self, message):
         if not self.verified:
             # User is not verified, try to verify using a PIN.
             try:
                 clientPin = int(message)
-            except ValueError:
+            except ValueError:  # Wrong PIN,
                 self.write_message("Invalid Pin")
                 log(self.id, "entered an invalid pin: " + message)
                 return
 
-            if clientPin == pin:
+            if clientPin == pin:  # Client pin matches
                 self.verified = True
                 self.write_message("Verified")
                 log(self.id, "entered correct pin")
@@ -70,9 +70,17 @@ class arduinoCom(tornado.websocket.WebSocketHandler):
 
             self.write_message("Verified")
 
-        else:
-            # The user is verified.
-            self.write_message("You entered this command: " + cmd)
+        else:  # This means the user is verified.
+            # TODO things
+            if message.startswith("PostMessage"):
+                self.write_message("PrintMessage" + "Your POST message: " +
+                                   message.replace("PostMessage", "", 1))
+            # This is the case when we don't cover that input function
+            else:
+                self.write_message("PrintMessage" +
+                                   "Command did not match any action, doing nothing.")
+                log("Command was not used: " + message)
+
         ''' # Code from ArduinoGen, not for ArduinoCom
             cmd = "Lock"
             if message[:len(cmd)] == cmd:
@@ -208,8 +216,10 @@ class arduinoCom(tornado.websocket.WebSocketHandler):
         # When the client closes the connection,
         # We should free any resources they had locked.
 
-        # Idk what I need to do here right now...
-        pass
+        # Remove the client from the list.
+        clients.remove(self)
+        log(self.id, "disconnected")
+
         '''
         if hasattr(self, 'device'):
             dev = self.device
@@ -251,7 +261,7 @@ def sigInt_handler(signum, frame):
     while clients:
         client = next(iter(clients))
         client.close(reason="Server Closing")
-        client.on_close()
+        # client.on_close()
 
     tornado.ioloop.IOLoop.current().stop()
     print("Server is closed")
