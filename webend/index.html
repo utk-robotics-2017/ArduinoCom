@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Websocket Template - IEEE - UTK</title>
+    <title>ArduinoCom - IEEE - UTK</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
     <style type="text/css">
     </style>
@@ -19,7 +19,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">IEEE Robotics - UTK</a>
+                <a class="navbar-brand" href="#">IEEE Robotics - ArduinoCom</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
@@ -30,7 +30,7 @@
     </nav>
     <div class="container">
         <header style="margin-bottom: 20px;">
-            <h1>Websocket Template</h1>
+            <h1>ArduinoCom Web Interface</h1>
         </header>
         <div class="row">
             <div class="col-lg-3">
@@ -59,7 +59,7 @@
         <div class="row">
             <div class="col-lg-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading clearfix">Chat</div>
+                    <div class="panel-heading clearfix">Console</div>
                     <div class="panel-body">
                         <textarea id="chat" class="form-control" rows="10" readonly></textarea>
                         <div class="input-group">
@@ -73,7 +73,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Console</div>
+                    <div class="panel-heading">Debugging &amp; Raw data</div>
                     <div class="panel-body"><textarea id="console" class="form-control" rows="10" readonly></textarea></div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                         var message = event.data;
 
                         //Do something with the message from the server
-                        $("#console").append(message + "\n");
+                        $("#console").append("[RECV]> " + message + "\n");
 
                         if (runCmd("Verified", message, function (input) {
                             //Pin was verified
@@ -174,8 +174,9 @@
                 $("#input").val("");
 
                 //Post the message to the server and append the output to the console
-                ws.send("PostMessage" + input);
-                $("#console").append("> " + "PostMessage" + input + "\n");
+                post_string = "PostMessage" + input
+                ws.send(post_string);
+                $("#console").append("[SEND]> " + post_string + "\n");
             });
         });
     </script>
