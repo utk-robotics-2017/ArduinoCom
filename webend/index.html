@@ -23,7 +23,7 @@
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.html">Websocket Template</a></li>
+                    <li class="active"><a href="index.html">Communications</a></li>
                 </ul>
             </div>
         </div>
@@ -157,6 +157,7 @@
                 else {
                     //We have a websocket connection, so we're disconnecting
                     ws.close();
+                    $("#console").append("[STOP]> Closed connection." + "\n")
                     verified = false;
                     ws = null;
                 }
