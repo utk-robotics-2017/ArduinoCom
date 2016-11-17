@@ -41,7 +41,7 @@ class bcolors:
 def debug(message):
     if DEBUG_APPLICATION:
         logging.debug(message)
-    return wrap(bcolors.DEBUG + "[DEBUG] " + message)
+    return wrap_end(bcolors.DEBUG + "[DEBUG] " + message)
 
 
 def debug1(message):
@@ -75,12 +75,12 @@ def trace(message):
 
 def info(message):
     logging.info(message)
-    return wrap(bcolors.INFO + "[INFO] " + message)
+    return wrap_end(bcolors.INFO + "[INFO] " + message)
 
 
 def warn(message):
     logging.warning(message)
-    return wrap(bcolors.WARNING + "[WARN] " + message)
+    return wrap_end(bcolors.WARNING + "[WARN] " + message)
 
 
 def warning(message):
@@ -90,20 +90,25 @@ def warning(message):
 
 def error(message):
     logging.error(message)
-    return wrap(bcolors.CRITICAL + "[ERROR] " + message)
+    return wrap_end(bcolors.CRITICAL + "[ERROR] " + message)
 
 
 def fatal(message):
     logging.critical(message)
-    return wrap(bcolors.CRITICAL + "[FATAL] " + message)
+    return wrap_end(bcolors.CRITICAL + "[FATAL] " + message)
 
 
 def gettimestamp():
     return '[{:%Y-%m-%d_%H:%M:%S}]'.format(datetime.datetime.now())
 
 
+def wrap_end(message):
+    return wrap(message) + bcolors.ENDC
+
+
 def wrap(message):
-    return gettimestamp() + message + bcolors.ENDC
+    return gettimestamp() + message
+
 
 if __name__ == "__main__":
     logging.debug("Debug info")

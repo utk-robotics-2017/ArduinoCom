@@ -49,8 +49,14 @@ class interface:
         # Move the console below the status bar
         self.env_windows["console_pad_coords"] = 2, 0, curses.LINES - 20, curses.COLS
         self.env_windows["console_pad_scroll"] = 0
-        self.env_windows["console_pad"].addstr(log.info("Pad Initialized."))
-        # self.env_windows["console_pad"].refresh(self.env_windows["console_pad_scroll"], 0, *self.env_windows["console_pad_coords"])
+        self.env_windows["console_pad"].addstr(log.wrap("Pad Initialized."))
+        self.env_windows["console_pad"].addstr(
+            log.wrap("Console Pad Position: " +
+                     str(self.env_windows["console_pad_coords"]) +
+                     " Scroll Value: " +
+                     str(self.env_windows["console_pad_scroll"])
+                     ))
+        self.env_windows["console_pad"].refresh(self.env_windows["console_pad_scroll"], 0, *self.env_windows["console_pad_coords"])
 
     def start_loop(self):
         pass
@@ -60,6 +66,7 @@ if __name__ == "__main__":
     log.info("ArduinoCom CLI loading...")
 
     log.info("Starting environment...")
+    log.info("This program is cursed.")
     curses.wrapper(interface_wrapper)
 
     # End of program.
