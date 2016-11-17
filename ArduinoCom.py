@@ -1,72 +1,63 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import log
 
 try:
-    import curses
+    import urwid
 except ImportError as err:
-    log.error("Could not import curses, is it installed?")
+    log.info("Maybe sudo apt install python3-urwid ?")
+    log.error("Could not import urwid.")
     log.trace(err)
+    sys.exit()
 
+import cmd
 import PyCmdMessenger.PyCmdMessenger
+
+# Shamelessly stolen:
+# from: http://zderadicka.eu/terminal-interfaces-in-python/
+# import commander
 
 log.DEBUG_LEVEL = 3
 
-
-def interface_wrapper(terminal_screen):
-    terminal_screen.clear()
-
-    application_interface = interface(terminal_screen)
-
-    application_interface.start_loop()
-
-    terminal_screen.refresh()
-    terminal_screen.getkey()
+color_pallette = [
+    ('title_bg', 'black', 'grey'),
+    ('bg', 'black', 'grey')
+]
 
 
-class interface:
-    env_windows = {}
+class Commands(cmd.Cmd):
+    intro = "Welcome to ArduinoCom. Type help or ? for commands.\n"
+    prompt = "A-C > "
+    doc_header = "Command Help:"
+    undoc_header = "This command hasn't been documented yet."
 
-    def __init__(self, terminal_screen):
-        terminal_screen.clear()
-        self.create_main_ui(terminal_screen)
+    def do_echo(self, *args):
+        return ' '.join(args)
 
-    def create_main_ui(self, terminal_screen):
-        terminal_screen.resize(curses.LINES - 20, curses.COLS)
-        terminal_screen.addstr("Loading ArduinoCom...")
+    def do_raise(self, *args):
+        """raise (no arguments)
+Literally just raises a test exception.
+There are no easter eggs in this program.
+        """
+        raise Exception('An air roar!')
 
-        # Make a Title/Status window at the top:
-        terminal_screen.mvwin(2, 0)
-        terminal_screen.refresh()
-        self.env_windows["ui_statusbar"] = curses.newwin(1, curses.COLS, 0, 0)
-        self.env_windows["ui_statusbar"].addstr("ArduinoCom Main Console")
-        self.env_windows["ui_statusbar"].refresh()
-        terminal_screen.refresh()
+    def do_connect(self, *args):
+        """connect [com port]
+Connects to an arduino
+Usage: Not completed yet.
+        """
+        raise NotImplementedError
 
-        # Make a pad for the console in/out to the arduino.
-        self.env_windows["console_pad"] = curses.newpad(curses.LINES - 20, curses.COLS)
-        # Move the console below the status bar
-        self.env_windows["console_pad_coords"] = 2, 0, curses.LINES - 20, curses.COLS
-        self.env_windows["console_pad_scroll"] = 0
-        self.env_windows["console_pad"].addstr(log.wrap("Pad Initialized."))
-        self.env_windows["console_pad"].addstr(
-            log.wrap("Console Pad Position: " +
-                     str(self.env_windows["console_pad_coords"]) +
-                     " Scroll Value: " +
-                     str(self.env_windows["console_pad_scroll"])
-                     ))
-        self.env_windows["console_pad"].refresh(self.env_windows["console_pad_scroll"], 0, *self.env_windows["console_pad_coords"])
 
-    def start_loop(self):
-        pass
-        # This will be filled later
+def urwid_keyhandler(key):
+    if key in ('q', 'Q'):
+        raise urwid.ExitMainLoop()
 
 if __name__ == "__main__":
     log.info("ArduinoCom CLI loading...")
 
-    log.info("Starting environment...")
-    log.info("This program is cursed.")
-    curses.wrapper(interface_wrapper)
+    Commands().cmdloop()
 
     # End of program.
