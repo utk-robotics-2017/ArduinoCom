@@ -30,8 +30,8 @@ color_pallette = [
 class Commands(cmd.Cmd):
     intro = "Welcome to ArduinoCom. Type help or ? for commands.\n"
     prompt = "A-C > "
-    doc_header = "Command Help:"
-    undoc_header = "This command hasn't been documented yet."
+    doc_header = "Documentation available for:"
+    undoc_header = "Not documented:"
 
     def do_echo(self, *args):
         return ' '.join(args)
@@ -49,6 +49,9 @@ Connects to an arduino
 Usage: Not completed yet.
         """
         raise NotImplementedError
+
+    def do_EOF(self, *args):
+        raise urwid.ExitMainLoop()
 
 
 def urwid_keyhandler(key):
