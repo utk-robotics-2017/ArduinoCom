@@ -3,6 +3,7 @@
 import os
 import sys
 import log
+import signal
 
 try:
     import urwid
@@ -13,11 +14,12 @@ except ImportError as err:
     sys.exit()
 
 import cmd
-import PyCmdMessenger.PyCmdMessenger
+import PyCmdMessenger
 
 # Shamelessly stolen:
 # from: http://zderadicka.eu/terminal-interfaces-in-python/
 # import commander
+import urwid_com_window
 
 log.DEBUG_LEVEL = 3
 
@@ -26,9 +28,18 @@ color_pallette = [
     ('bg', 'black', 'grey')
 ]
 
+global baud_rate
+baud_rate = 115200
+
+global ac_CmdMessengerInstance
+global ac_ArduinoInstance
+global ac_Commands
+global ac_port
+ac_port = ""
+
 
 class Commands(cmd.Cmd):
-    intro = "Welcome to ArduinoCom. Type help or ? for commands.\n"
+    intro = "Welcome to ArduinoCom. Type help or ? for commands.\nCtrl-D or quit to exit."
     prompt = "A-C > "
     doc_header = "Documentation available for:"
     undoc_header = "Not documented:"
@@ -43,20 +54,51 @@ There are no easter eggs in this program.
         """
         raise Exception('An air roar!')
 
+    def do_c(self, *args):
+        self.do_connect(*args)
+
     def do_connect(self, *args):
         """connect [com port]
 Connects to an arduino
-Usage: Not completed yet.
+Example: connect /dev/mega
         """
-        raise NotImplementedError
+        if args[0] == "":
+            print("Wrong usage of connect.")
+            # return "Nope."
+        else:
+            global ac_port
+            ac_port = args[0]
+            global ac_ArduinoInstance, baud_rate
+            ac_ArduinoInstance = PyCmdMessenger.ArduinoBoard(ac_port, baud_rate=baud_rate)
+            # TODO ac_Commands
+            global ac_CmdMessengerInstance
+            ac_CmdMessengerInstance = PyCmdMessenger(ac_ArduinoInstance, ac_Commands)
+            # Starts the urwid window, using an output frame and then an input box
+            print("Attempting to start connection...")
+
+    def do_quit(self, *args):
+        self.do_exit(args)
+
+    def do_exit(self, *args):
+        """exit
+No Arguments.
+Exits the program.
+        """
+        print("Goodbye.\n")
+        sys.exit(0)
 
     def do_EOF(self, *args):
-        raise urwid.ExitMainLoop()
+        print("EOF: Exiting Program.")
+        self.do_exit()
 
 
 def urwid_keyhandler(key):
     if key in ('q', 'Q'):
         raise urwid.ExitMainLoop()
+
+
+def sigint_handler(signal, frame):
+    sys.exit("SigInt Caught.")
 
 if __name__ == "__main__":
     log.info("ArduinoCom CLI loading...")
