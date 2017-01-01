@@ -8,8 +8,10 @@ from cmd2 import Cmd, options, make_option
 from rip.head.spine.core import get_spine
 
 from rip.head.spine.appendages.motor import Motor as SpineMotor
+from rip.head.spine.appendages.switch import Switch as SpineSwitch
 
 from appendages.motor import Motor as ACMotor
+from appendages.switch import Switch as ACSwitch
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
@@ -20,6 +22,7 @@ class ArduinoCom(Cmd):
     undoc_header = "Not documented:"
     gs = None
     s = None
+    appendages = None
 
     def __init__(self):
         super().__init__()
@@ -46,12 +49,16 @@ class ArduinoCom(Cmd):
         self.s = self.gs.__enter__()
         self.appendages = self.s.get_appendage_dict()
 
+        def registerMethods(ACClass):
+            self.__dict__["do_" + name] = types.MethodType(ACClass.interact, self)
+            self.__dict__["help_" + name] = types.MethodType(ACClass.help, self)
+            self.__dict__["complete_" + name] = types.MethodType(ACClass.complete, self)
+
         for name, appendage in self.appendages.items():
             if isinstance(appendage, SpineMotor):
-                self.__dict__["do_" + name] = types.MethodType(ACMotor.interact, self)
-                self.__dict__["help_" + name] = types.MethodType(ACMotor.help, self)
-                self.__dict__["complete_" + name] = types.MethodType(ACMotor.complete, self)
-
+                registerMethods(ACMotor)
+            elif isinstance(appendage, SpineSwitch):
+                registerMethods(ACSwitch)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
@@ -60,7 +67,13 @@ class ArduinoCom(Cmd):
         return [i for i in self.connectedDevices if i.startswith(text)]
 
     def do_disconnect(self, parseResults):
-        if self.gs is not None:
+        if self.appendages is not None:
+            for name in self.appendages:
+                del self.__dict__["do_" + name]
+                del self.__dict__["help_" + name]
+                del self.__dict__["complete_" + name]
+            self.appendages = None
+
             self.gs.__exit__(None, None, None)
             self.s = None
             self.gs = None
