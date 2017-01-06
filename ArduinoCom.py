@@ -9,9 +9,11 @@ from rip.head.spine.core import get_spine
 
 from rip.head.spine.appendages.motor import Motor as SpineMotor
 from rip.head.spine.appendages.switch import Switch as SpineSwitch
+from rip.head.spine.appendages.servo import Servo as SpineServo
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
+from appendages.servo import Servo as ACServo
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
@@ -59,6 +61,8 @@ class ArduinoCom(Cmd):
                 registerMethods(ACMotor)
             elif isinstance(appendage, SpineSwitch):
                 registerMethods(ACSwitch)
+            elif isinstance(appendage, SpineServo):
+                registerMethods(ACServo)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
@@ -96,4 +100,5 @@ class ArduinoCom(Cmd):
 if __name__ == '__main__':
     ac = ArduinoCom()
     ac.debug = True
+    ac.case_insensitive = True
     ac.cmdloop()

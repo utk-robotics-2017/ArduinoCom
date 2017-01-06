@@ -1,3 +1,5 @@
+import time
+
 class Switch:
     def interact(self, parseResults):
         def help(name):
