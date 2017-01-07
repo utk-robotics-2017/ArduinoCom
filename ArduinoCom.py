@@ -2,6 +2,7 @@
 
 import os
 import types
+import logging
 
 from cmd2 import Cmd, options, make_option
 
@@ -101,4 +102,5 @@ if __name__ == '__main__':
     ac = ArduinoCom()
     ac.debug = True
     ac.case_insensitive = True
+    logging.disable(logging.INFO)
     ac.cmdloop()
