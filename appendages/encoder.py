@@ -32,5 +32,5 @@ class Encoder:
         print("       <encoder:str> zero")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["read", "read_until_change"] if i.startswith(text)]
+        return [i for i in ["read", "zero"] if i.startswith(text)]
 
