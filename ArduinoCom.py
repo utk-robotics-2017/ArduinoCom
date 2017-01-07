@@ -11,10 +11,14 @@ from rip.head.spine.core import get_spine
 from rip.head.spine.appendages.motor import Motor as SpineMotor
 from rip.head.spine.appendages.switch import Switch as SpineSwitch
 from rip.head.spine.appendages.servo import Servo as SpineServo
+from rip.head.spine.appendages.electronic_component_detector import ElectronicComponentDetector as SpineElectronicComponentDetector
+from rip.head.spine.appendages.encoder import Encoder as SpineEncoder
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
 from appendages.servo import Servo as ACServo
+from appendages.electronic_component_detector import ElectronicComponentDetector as ACElectronicComponentDetector
+from appendages.encoder import Encoder as ACEncoder
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
@@ -64,6 +68,10 @@ class ArduinoCom(Cmd):
                 registerMethods(ACSwitch)
             elif isinstance(appendage, SpineServo):
                 registerMethods(ACServo)
+            elif isinstance(appendage, SpineElectronicComponentDetector):
+                registerMethods(ACElectronicComponentDetector)
+            elif isinstance(appendage, SpineEncoder):
+                registerMethods(ACEncoder)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
