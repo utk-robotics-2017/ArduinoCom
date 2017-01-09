@@ -14,6 +14,7 @@ from rip.head.spine.appendages.servo import Servo as SpineServo
 from rip.head.spine.appendages.electronic_component_detector import ElectronicComponentDetector as SpineElectronicComponentDetector
 from rip.head.spine.appendages.encoder import Encoder as SpineEncoder
 from rip.head.spine.appendages.arm import Arm as SpineArm
+from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFourWheelDrive
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
@@ -21,6 +22,7 @@ from appendages.servo import Servo as ACServo
 from appendages.electronic_component_detector import ElectronicComponentDetector as ACElectronicComponentDetector
 from appendages.encoder import Encoder as ACEncoder
 from appendages.arm import Arm as ACArm
+from appendages.four_wheel_drive import FourWheelDrive as ACFourWheelDrive
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
@@ -76,6 +78,8 @@ class ArduinoCom(Cmd):
                 registerMethods(ACEncoder)
             elif isinstance(appendage, SpineArm):
                 registerMethods(ACArm)
+            elif isinstance(appendage, SpineFourWheelDrive):
+                registerMethods(ACFourWheelDrive)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
@@ -95,20 +99,40 @@ class ArduinoCom(Cmd):
             self.s = None
             self.gs = None
 
+    def help_disconnect(self):
+        print("usage: disconnect")
+        print("Disconnects from a connected arduino.")
+
+    def complete_connect(self, text, line, begidx, endidx):
+        return []
+
     def do_exit(self, parseResults):
         self.do_disconnect(None)
         return True
+
+    def help_exit(self):
+        print("Disconnects from any connected arduinos, and exits ArduinoCom.")
     
     def do_quit(self, parseResults):
         return self.do_exit(parseResults)
+
+    def help_quit(self):
+        print("Alias for exit")
 
     def do_EOF(self, parseResults):
         print()
         return self.do_exit(parseResults)
     do_eof = do_EOF
 
+    def help_help(self):
+        print("Prints help for commands")
+
     def get_names(self):
-        return dir(self)
+        names = dir(self)
+        names.remove("do_EOF")
+        names.remove("do_eof")
+        names.remove("do_q")
+        return names
 
 if __name__ == '__main__':
     ac = ArduinoCom()
