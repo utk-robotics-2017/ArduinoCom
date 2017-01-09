@@ -15,6 +15,7 @@ from rip.head.spine.appendages.electronic_component_detector import ElectronicCo
 from rip.head.spine.appendages.encoder import Encoder as SpineEncoder
 from rip.head.spine.appendages.arm import Arm as SpineArm
 from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFourWheelDrive
+from rip.head.spine.appendages.i2c_encoder import I2CEncoder as SpineI2CEncoder
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
@@ -23,6 +24,7 @@ from appendages.electronic_component_detector import ElectronicComponentDetector
 from appendages.encoder import Encoder as ACEncoder
 from appendages.arm import Arm as ACArm
 from appendages.four_wheel_drive import FourWheelDrive as ACFourWheelDrive
+from appendages.i2c_encoder import I2CEncoder as ACI2CEncoder
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
@@ -80,6 +82,8 @@ class ArduinoCom(Cmd):
                 registerMethods(ACArm)
             elif isinstance(appendage, SpineFourWheelDrive):
                 registerMethods(ACFourWheelDrive)
+            elif isinstance(appendage, SpineI2CEncoder):
+                registerMethods(ACI2CEncoder)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
