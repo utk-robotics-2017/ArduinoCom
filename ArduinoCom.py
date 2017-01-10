@@ -18,6 +18,7 @@ from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFo
 from rip.head.spine.appendages.i2c_encoder import I2CEncoder as SpineI2CEncoder
 from rip.head.spine.appendages.line_sensor import LineSensor as SpineLineSensor
 from rip.head.spine.appendages.pid import Pid as SpinePid
+from rip.head.spine.appendages.stepper import Stepper as SpineStepper
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
@@ -29,6 +30,7 @@ from appendages.four_wheel_drive import FourWheelDrive as ACFourWheelDrive
 from appendages.i2c_encoder import I2CEncoder as ACI2CEncoder
 from appendages.line_sensor import LineSensor as ACLineSensor
 from appendages.pid import Pid as ACPid
+from appendages.stepper import Stepper as ACStepper
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
@@ -92,6 +94,8 @@ class ArduinoCom(Cmd):
                 registerMethods(ACLineSensor)
             elif isinstance(appendage, SpinePid):
                 registerMethods(ACPid)
+            elif isinstance(appendage, SpineStepper):
+                registerMethods(ACStepper)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
