@@ -20,6 +20,7 @@ from rip.head.spine.appendages.line_sensor import LineSensor as SpineLineSensor
 from rip.head.spine.appendages.pid import Pid as SpinePid
 from rip.head.spine.appendages.stepper import Stepper as SpineStepper
 from rip.head.spine.appendages.ultrasonic import Ultrasonic as SpineUltrasonic
+from rip.head.spine.appendages.velocity_controlled_motor import VelocityControlledMotor as SpineVelocityControlledMotor
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
@@ -33,6 +34,7 @@ from appendages.line_sensor import LineSensor as ACLineSensor
 from appendages.pid import Pid as ACPid
 from appendages.stepper import Stepper as ACStepper
 from appendages.ultrasonic import Ultrasonic as ACUltrasonic
+from appendages.velocity_controlled_motor import VelocityControlledMotor as ACVelocityControlledMotor
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
@@ -100,6 +102,8 @@ class ArduinoCom(Cmd):
                 registerMethods(ACStepper)
             elif isinstance(appendage, SpineUltrasonic):
                 registerMethods(ACUltrasonic)
+            elif isinstance(appendage, SpineVelocityControlledMotor):
+                registerMethods(ACVelocityControlledMotor)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
