@@ -28,8 +28,8 @@ class LineSensor:
             help(name)
 
     def help(self):
-        print("       <fwd:str> set_value <value:int>")
-        print("       <fwd:str> read")
+        print("       <line_sensor:str> set_value <value:int>")
+        print("       <line_sensor:str> read")
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set_value", "read"] if i.startswith(text)]
