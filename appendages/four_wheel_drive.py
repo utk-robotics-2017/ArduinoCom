@@ -46,6 +46,10 @@ class FourWheelDrive:
                 return
 
         elif args[0] == "stop":
+            if len(args) != 1:
+                help(name)
+                return
+
             self.s.get_appendage(name).stop()
 
         elif args[0] == "drive_pid":
@@ -100,38 +104,74 @@ class FourWheelDrive:
             self.s.get_appendage(name).rotate_pid(left, right)
 
         elif args[0] == "get_left_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_left_velocity()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_right_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_right_velocity()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_left_front_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_left_front_velocity()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_left_back_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_left_back_velocity()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_right_front_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_right_front_velocity()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_right_back_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_right_back_velocity()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_left_position":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_left_position()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_right_position":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_right_position()
             print("{}: {}".format(name, val))
 
         elif args[0] == "set_pid_type":
+            if len(args) != 2:
+                help(name)
+                return
+
             pid_type = args[1]
 
             if pid_type not in ["distance", "angle"]:
@@ -141,10 +181,18 @@ class FourWheelDrive:
             self.s.get_appendage(name).set_pid_type(pid_type)
 
         elif args[0] == "pid_get":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).pid_get()
             print("{}: {}".format(name, val))
 
         elif args[0] == "pid_set":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = int(args[1])
             except ValueError:

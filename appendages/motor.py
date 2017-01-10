@@ -13,6 +13,7 @@ class Motor:
             if len(args) != 2:
                 help(name)
                 return
+
             try:
                 value = int(args[1])
             except ValueError:
@@ -25,6 +26,7 @@ class Motor:
             if len(args) != 1:
                 help(name)
                 return
+
             self.s.get_appendage(name).stop()
 
         else:

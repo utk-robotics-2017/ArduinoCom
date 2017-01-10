@@ -10,6 +10,10 @@ class VelocityControlledMotor:
             help(name)
 
         elif args[0] == "drive":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = int(args[1])
             except ValueError:
@@ -19,6 +23,10 @@ class VelocityControlledMotor:
             self.s.get_appendage(name).drive(val)
 
         elif args[0] == "set":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = float(args[1])
             except ValueError:
@@ -28,14 +36,26 @@ class VelocityControlledMotor:
             self.s.get_appendage(name).set(val)
 
         elif args[0] == "get_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_velocity()
             print("{}: {}".format(name, val))
 
         elif args[0] == "get_position":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).get_position()
             print("{}: {}".format(name, val))
 
         elif args[0] == "set_position":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = float(args[1])
             except ValueError:
@@ -45,6 +65,10 @@ class VelocityControlledMotor:
             self.s.get_appendage(name).set_position(val)
 
         elif args[0] == "stop":
+            if len(args) != 1:
+                help(name)
+                return
+
             self.s.get_appendage(name).stop()
 
         else:

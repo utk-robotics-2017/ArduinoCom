@@ -10,6 +10,10 @@ class Pid:
             help(name)
 
         elif args[0] == "modify_constants":
+            if len(args) != 4:
+                help(name)
+                return
+
             try:
                 kp = float(args[1])
                 ki = float(args[2])
@@ -21,6 +25,10 @@ class Pid:
             self.s.get_appendage(name).modify_constants(kp, ki, kd)
 
         elif args[0] == "set":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 setpoint = float(args[1])
             except ValueError:
@@ -30,9 +38,17 @@ class Pid:
             self.s.get_appendage(name).set(setpoint)
 
         elif args[0] == "off":
+            if len(args) != 1:
+                help(name)
+                return
+
             self.s.get_appendage(name).off()
 
         elif args[0] == "display":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).display()
             print("{}: {}".format(name, val))
 

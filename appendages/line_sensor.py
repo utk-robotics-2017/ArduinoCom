@@ -12,6 +12,10 @@ class LineSensor:
             help(name)
 
         elif args[0] == "set_value":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = int(args[1])
             except ValueError:
@@ -21,6 +25,10 @@ class LineSensor:
             self.s.get_appendage(name).set_value(val)
 
         elif args[0] == "read":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).read()
             print("{}: {}".format(name, val))
 

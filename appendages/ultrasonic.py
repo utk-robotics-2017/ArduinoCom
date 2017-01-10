@@ -10,6 +10,10 @@ class Stepper:
             help(name)
 
         elif args[0] == "set_distance":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = float(args[1])
             except ValueError:
@@ -19,6 +23,10 @@ class Stepper:
             self.s.get_appendage(name).set_distance(val)
 
         elif args[0] == "read":
+            if len(args) != 1:
+                help(name)
+                return
+
             val = self.s.get_appendage(name).read()
             print("{}: {}".format(name, val))
 

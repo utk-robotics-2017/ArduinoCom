@@ -10,6 +10,10 @@ class Stepper:
             help(name)
 
         elif args[0] == "set_speed":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = float(args[1])
             except ValueError:
@@ -19,6 +23,10 @@ class Stepper:
             self.s.get_appendage(name).set_speed(val)
 
         elif args[0] == "set_angle":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = float(args[1])
             except ValueError:
@@ -28,6 +36,10 @@ class Stepper:
             self.s.get_appendage(name).set_angle(val)
 
         elif args[0] == "step":
+            if len(args) != 2:
+                help(name)
+                return
+
             try:
                 val = int(args[1])
             except ValueError:
