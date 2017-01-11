@@ -27,7 +27,7 @@ try:
     from rip.head.spine.appendages.velocity_controlled_motor import VelocityControlledMotor as SpineVelocityControlledMotor
 except ImportError as err:
     print("Unable to import RIP appendages,")
-    print("Easy fix: git submodule init; git submodule update")
+    print("Try this: git submodule update --init --recursive")
     print("Otherwise, add envvar PYTHONPATH=\"path/to/folder/with/rip\"")
     print("Specific Error: " + str(err))
 
@@ -42,7 +42,7 @@ from appendages.i2c_encoder import I2CEncoder as ACI2CEncoder
 from appendages.line_sensor import LineSensor as ACLineSensor
 from appendages.pid import Pid as ACPid
 from appendages.stepper import Stepper as ACStepper
-#from appendages.ultrasonic import Ultrasonic as ACUltrasonic
+from appendages.ultrasonic import Ultrasonic as ACUltrasonic
 from appendages.velocity_controlled_motor import VelocityControlledMotor as ACVelocityControlledMotor
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
