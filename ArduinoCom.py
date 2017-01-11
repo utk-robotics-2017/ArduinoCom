@@ -5,7 +5,7 @@ import types
 import logging
 
 try:
-    from cmd2 import Cmd, options, make_option
+    from cmd2 import Cmd  # , options, make_option
 except ImportError as err:
     print("Maybe you should pip3 install cmd2 (the better cmd class)")
 
@@ -60,9 +60,9 @@ class ArduinoCom(Cmd):
     def __init__(self):
         super().__init__()
         self.registeredDevices = [d for d in os.listdir(CURRENT_ARDUINO_CODE_DIR)
-            if os.path.isdir("{0:s}/{1:s}".format(CURRENT_ARDUINO_CODE_DIR, d)) and
-            not d == ".git" and os.path.exists("{0:s}/{1:s}/{1:s}.json"
-                                               .format(CURRENT_ARDUINO_CODE_DIR, d))]
+                                  if os.path.isdir("{0:s}/{1:s}".format(CURRENT_ARDUINO_CODE_DIR, d)) and
+                                  not d == ".git" and os.path.exists("{0:s}/{1:s}/{1:s}.json"
+                                                                     .format(CURRENT_ARDUINO_CODE_DIR, d))]
         self.connectedDevices = [d for d in self.registeredDevices
                                  if os.path.exists("/dev/{0:s}".format(d))]
 
@@ -136,9 +136,6 @@ class ArduinoCom(Cmd):
         print("usage: disconnect")
         print("Disconnects from a connected arduino.")
 
-    def complete_connect(self, text, line, begidx, endidx):
-        return []
-
     def do_exit(self, parseResults):
         self.do_disconnect(None)
         return True
@@ -166,6 +163,7 @@ class ArduinoCom(Cmd):
         names.remove("do_eof")
         names.remove("do_q")
         return names
+
 
 if __name__ == '__main__':
     ac = ArduinoCom()
