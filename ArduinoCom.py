@@ -29,7 +29,7 @@ except ImportError as err:
     print("Unable to import RIP appendages,")
     print("Easy fix: git submodule init; git submodule update")
     print("Otherwise, add envvar PYTHONPATH=\"path/to/folder/with/rip\"")
-    print("Specific Error: " + err)
+    print("Specific Error: " + str(err))
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
