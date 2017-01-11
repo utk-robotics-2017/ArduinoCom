@@ -4,23 +4,32 @@ import os
 import types
 import logging
 
-from cmd2 import Cmd, options, make_option
+try:
+    from cmd2 import Cmd, options, make_option
+except ImportError as err:
+    print("Maybe you should pip3 install cmd2 (the better cmd class)")
 
-from rip.head.spine.core import get_spine
+try:
+    from rip.head.spine.core import get_spine
 
-from rip.head.spine.appendages.motor import Motor as SpineMotor
-from rip.head.spine.appendages.switch import Switch as SpineSwitch
-from rip.head.spine.appendages.servo import Servo as SpineServo
-from rip.head.spine.appendages.electronic_component_detector import ElectronicComponentDetector as SpineElectronicComponentDetector
-from rip.head.spine.appendages.encoder import Encoder as SpineEncoder
-from rip.head.spine.appendages.arm import Arm as SpineArm
-from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFourWheelDrive
-from rip.head.spine.appendages.i2c_encoder import I2CEncoder as SpineI2CEncoder
-from rip.head.spine.appendages.line_sensor import LineSensor as SpineLineSensor
-from rip.head.spine.appendages.pid import Pid as SpinePid
-from rip.head.spine.appendages.stepper import Stepper as SpineStepper
-from rip.head.spine.appendages.ultrasonic import Ultrasonic as SpineUltrasonic
-from rip.head.spine.appendages.velocity_controlled_motor import VelocityControlledMotor as SpineVelocityControlledMotor
+    from rip.head.spine.appendages.motor import Motor as SpineMotor
+    from rip.head.spine.appendages.switch import Switch as SpineSwitch
+    from rip.head.spine.appendages.servo import Servo as SpineServo
+    from rip.head.spine.appendages.electronic_component_detector import ElectronicComponentDetector as SpineElectronicComponentDetector
+    from rip.head.spine.appendages.encoder import Encoder as SpineEncoder
+    from rip.head.spine.appendages.arm import Arm as SpineArm
+    from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFourWheelDrive
+    from rip.head.spine.appendages.i2c_encoder import I2CEncoder as SpineI2CEncoder
+    from rip.head.spine.appendages.line_sensor import LineSensor as SpineLineSensor
+    from rip.head.spine.appendages.pid import Pid as SpinePid
+    from rip.head.spine.appendages.stepper import Stepper as SpineStepper
+    from rip.head.spine.appendages.ultrasonic import Ultrasonic as SpineUltrasonic
+    from rip.head.spine.appendages.velocity_controlled_motor import VelocityControlledMotor as SpineVelocityControlledMotor
+except ImportError as err:
+    print("Unable to import RIP appendages,")
+    print("Easy fix: git submodule init; git submodule update")
+    print("Otherwise, add envvar PYTHONPATH=\"path/to/folder/with/rip\"")
+    print("Specific Error: " + err)
 
 from appendages.motor import Motor as ACMotor
 from appendages.switch import Switch as ACSwitch
@@ -33,10 +42,11 @@ from appendages.i2c_encoder import I2CEncoder as ACI2CEncoder
 from appendages.line_sensor import LineSensor as ACLineSensor
 from appendages.pid import Pid as ACPid
 from appendages.stepper import Stepper as ACStepper
-from appendages.ultrasonic import Ultrasonic as ACUltrasonic
+#from appendages.ultrasonic import Ultrasonic as ACUltrasonic
 from appendages.velocity_controlled_motor import VelocityControlledMotor as ACVelocityControlledMotor
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
+
 
 class ArduinoCom(Cmd):
     intro = "Welcome to ArduinoCom. Type help or ? for commands.\nCtrl-D to exit."
@@ -53,9 +63,8 @@ class ArduinoCom(Cmd):
             if os.path.isdir("{0:s}/{1:s}".format(CURRENT_ARDUINO_CODE_DIR, d)) and
             not d == ".git" and os.path.exists("{0:s}/{1:s}/{1:s}.json"
                                                .format(CURRENT_ARDUINO_CODE_DIR, d))]
-        self.connectedDevices = [d for d in self.registeredDevices 
+        self.connectedDevices = [d for d in self.registeredDevices
                                  if os.path.exists("/dev/{0:s}".format(d))]
-
 
     def do_connect(self, parseResults):
         args = parseResults.parsed[1].split()
@@ -136,7 +145,7 @@ class ArduinoCom(Cmd):
 
     def help_exit(self):
         print("Disconnects from any connected arduinos, and exits ArduinoCom.")
-    
+
     def do_quit(self, parseResults):
         return self.do_exit(parseResults)
 
