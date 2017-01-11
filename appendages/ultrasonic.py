@@ -1,4 +1,4 @@
-class Stepper:
+class Ultrasonic:
     def interact(self, parseResults):
         def help(name):
             self.__dict__["help_" + name]()
@@ -34,8 +34,8 @@ class Stepper:
             help(name)
 
     def help(self):
-        print("usage: <pid:str> set_distance <distance:float>")
-        print("       <pid:str> read")
+        print("usage: <ultrasonic:str> set_distance <distance:float>")
+        print("       <ultrasonic:str> read")
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set_distance", "read"] if i.startswith(text)]
