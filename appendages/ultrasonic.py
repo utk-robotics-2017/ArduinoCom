@@ -28,7 +28,7 @@ class Ultrasonic:
                 return
 
             val = self.s.get_appendage(name).read()
-            print("{}: {}".format(name, val))
+            print("{}: {} cm".format(name, val.base_value))
 
         else:
             help(name)
@@ -39,4 +39,3 @@ class Ultrasonic:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set_distance", "read"] if i.startswith(text)]
-
