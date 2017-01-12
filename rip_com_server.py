@@ -3,11 +3,11 @@
 import sys
 import random
 import time
-import json
+# import json
 import signal
-import socket
-import os
-import os.path
+# import socket
+# import os
+# import os.path
 
 import tornado.ioloop
 import tornado.websocket
@@ -29,7 +29,7 @@ pin = random.randint(10000, 99999)
 def log(wsId, message):
     print(("{}\tClient {:2d}\t{}".format(
         time.strftime("%H:%M:%S", time.localtime()), wsId, message
-        )))
+    )))
 
 
 class arduinoCom(tornado.websocket.WebSocketHandler):
@@ -266,6 +266,7 @@ def sigInt_handler(signum, frame):
     tornado.ioloop.IOLoop.current().stop()
     print("Server is closed")
     sys.exit(0)
+
 
 if __name__ == "__main__":
     app = make_app()
