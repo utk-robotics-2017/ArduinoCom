@@ -26,31 +26,38 @@ try:
     from rip.head.spine.appendages.ultrasonic import Ultrasonic as SpineUltrasonic
     from rip.head.spine.appendages.velocity_controlled_motor import VelocityControlledMotor as SpineVelocityControlledMotor
 except ImportError as err:
-    print("Unable to import RIP appendages,")
-    print("Try this: git submodule update --init --recursive")
-    print("Otherwise, add envvar PYTHONPATH=\"path/to/folder/with/rip\"")
+    print("Unable to import one or more RIP appendages,")
+    print("Ensure submodules are up to date, try: git submodule update --init --recursive")
+    print("Ensure imports can find the RIP instance,\n envvar PYTHONPATH=\"path/to/folder/with/rip\" can be used.")
     print("Specific Error: " + str(err))
 
-from appendages.motor import Motor as RCMotor
-from appendages.switch import Switch as RCSwitch
-from appendages.servo import Servo as RCServo
-from appendages.electronic_component_detector import ElectronicComponentDetector as RCElectronicComponentDetector
-from appendages.encoder import Encoder as RCEncoder
-from appendages.arm import Arm as RCArm
-from appendages.four_wheel_drive import FourWheelDrive as RCFourWheelDrive
-from appendages.i2c_encoder import I2CEncoder as RCI2CEncoder
-from appendages.line_sensor import LineSensor as RCLineSensor
-from appendages.pid import Pid as RCPid
-from appendages.stepper import Stepper as RCStepper
-from appendages.ultrasonic import Ultrasonic as RCUltrasonic
-from appendages.velocity_controlled_motor import VelocityControlledMotor as RCVelocityControlledMotor
+# RipCom-specific things.
+try:
+    from appendages.motor import Motor as RCMotor
+    from appendages.switch import Switch as RCSwitch
+    from appendages.servo import Servo as RCServo
+    from appendages.electronic_component_detector import ElectronicComponentDetector as RCElectronicComponentDetector
+    from appendages.encoder import Encoder as RCEncoder
+    from appendages.arm import Arm as RCArm
+    from appendages.four_wheel_drive import FourWheelDrive as RCFourWheelDrive
+    from appendages.i2c_encoder import I2CEncoder as RCI2CEncoder
+    from appendages.line_sensor import LineSensor as RCLineSensor
+    from appendages.pid import Pid as RCPid
+    from appendages.stepper import Stepper as RCStepper
+    from appendages.ultrasonic import Ultrasonic as RCUltrasonic
+    from appendages.velocity_controlled_motor import VelocityControlledMotor as RCVelocityControlledMotor
+except ImportError as err:
+    print("Couldn't import a rip_com appendage.")
+    print("This should be reported to the rip_com maintainer(s):")
+    print(str(err))
 
+# Points to the current robot's code.
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
 
 class ArduinoCom(Cmd):
-    intro = "Welcome to ArduinoCom. Type help or ? for commands.\nCtrl-D to exit."
-    prompt = "RC> "
+    intro = "Welcome to RipCom. Type help or ? for commands.\nCtrl-D to exit."
+    prompt = "[RC]> "
     doc_header = "Documentation available for:"
     undoc_header = "Not documented:"
     gs = None
@@ -86,6 +93,7 @@ class ArduinoCom(Cmd):
             self.__dict__["help_" + name] = types.MethodType(RCClass.help, self)
             self.__dict__["complete_" + name] = types.MethodType(RCClass.complete, self)
 
+        # TODO There should be a better way to do this than to register each one hardcoded.
         for name, appendage in self.appendages.items():
             if isinstance(appendage, SpineMotor):
                 registerMethods(RCMotor)
@@ -116,6 +124,7 @@ class ArduinoCom(Cmd):
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
+        print("Normally, ArduinoName could be something as simple as 'mega'")
 
     def complete_connect(self, text, line, begidx, endidx):
         return [i for i in self.connectedDevices if i.startswith(text)]
@@ -165,6 +174,8 @@ class ArduinoCom(Cmd):
         return names
 
 
+# Initializes the command interface loop on the terminal.
+# Uses __main__ detection so that this file can be used as an import from other pys.
 if __name__ == '__main__':
     rc = ArduinoCom()
     rc.debug = True
