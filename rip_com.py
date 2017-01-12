@@ -31,26 +31,26 @@ except ImportError as err:
     print("Otherwise, add envvar PYTHONPATH=\"path/to/folder/with/rip\"")
     print("Specific Error: " + str(err))
 
-from appendages.motor import Motor as ACMotor
-from appendages.switch import Switch as ACSwitch
-from appendages.servo import Servo as ACServo
-from appendages.electronic_component_detector import ElectronicComponentDetector as ACElectronicComponentDetector
-from appendages.encoder import Encoder as ACEncoder
-from appendages.arm import Arm as ACArm
-from appendages.four_wheel_drive import FourWheelDrive as ACFourWheelDrive
-from appendages.i2c_encoder import I2CEncoder as ACI2CEncoder
-from appendages.line_sensor import LineSensor as ACLineSensor
-from appendages.pid import Pid as ACPid
-from appendages.stepper import Stepper as ACStepper
-from appendages.ultrasonic import Ultrasonic as ACUltrasonic
-from appendages.velocity_controlled_motor import VelocityControlledMotor as ACVelocityControlledMotor
+from appendages.motor import Motor as RCMotor
+from appendages.switch import Switch as RCSwitch
+from appendages.servo import Servo as RCServo
+from appendages.electronic_component_detector import ElectronicComponentDetector as RCElectronicComponentDetector
+from appendages.encoder import Encoder as RCEncoder
+from appendages.arm import Arm as RCArm
+from appendages.four_wheel_drive import FourWheelDrive as RCFourWheelDrive
+from appendages.i2c_encoder import I2CEncoder as RCI2CEncoder
+from appendages.line_sensor import LineSensor as RCLineSensor
+from appendages.pid import Pid as RCPid
+from appendages.stepper import Stepper as RCStepper
+from appendages.ultrasonic import Ultrasonic as RCUltrasonic
+from appendages.velocity_controlled_motor import VelocityControlledMotor as RCVelocityControlledMotor
 
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
 
 class ArduinoCom(Cmd):
     intro = "Welcome to ArduinoCom. Type help or ? for commands.\nCtrl-D to exit."
-    prompt = "AC> "
+    prompt = "RC> "
     doc_header = "Documentation available for:"
     undoc_header = "Not documented:"
     gs = None
@@ -81,38 +81,38 @@ class ArduinoCom(Cmd):
         self.s = self.gs.__enter__()
         self.appendages = self.s.get_appendage_dict()
 
-        def registerMethods(ACClass):
-            self.__dict__["do_" + name] = types.MethodType(ACClass.interact, self)
-            self.__dict__["help_" + name] = types.MethodType(ACClass.help, self)
-            self.__dict__["complete_" + name] = types.MethodType(ACClass.complete, self)
+        def registerMethods(RCClass):
+            self.__dict__["do_" + name] = types.MethodType(RCClass.interact, self)
+            self.__dict__["help_" + name] = types.MethodType(RCClass.help, self)
+            self.__dict__["complete_" + name] = types.MethodType(RCClass.complete, self)
 
         for name, appendage in self.appendages.items():
             if isinstance(appendage, SpineMotor):
-                registerMethods(ACMotor)
+                registerMethods(RCMotor)
             elif isinstance(appendage, SpineSwitch):
-                registerMethods(ACSwitch)
+                registerMethods(RCSwitch)
             elif isinstance(appendage, SpineServo):
-                registerMethods(ACServo)
+                registerMethods(RCServo)
             elif isinstance(appendage, SpineElectronicComponentDetector):
-                registerMethods(ACElectronicComponentDetector)
+                registerMethods(RCElectronicComponentDetector)
             elif isinstance(appendage, SpineEncoder):
-                registerMethods(ACEncoder)
+                registerMethods(RCEncoder)
             elif isinstance(appendage, SpineArm):
-                registerMethods(ACArm)
+                registerMethods(RCArm)
             elif isinstance(appendage, SpineFourWheelDrive):
-                registerMethods(ACFourWheelDrive)
+                registerMethods(RCFourWheelDrive)
             elif isinstance(appendage, SpineI2CEncoder):
-                registerMethods(ACI2CEncoder)
+                registerMethods(RCI2CEncoder)
             elif isinstance(appendage, SpineLineSensor):
-                registerMethods(ACLineSensor)
+                registerMethods(RCLineSensor)
             elif isinstance(appendage, SpinePid):
-                registerMethods(ACPid)
+                registerMethods(RCPid)
             elif isinstance(appendage, SpineStepper):
-                registerMethods(ACStepper)
+                registerMethods(RCStepper)
             elif isinstance(appendage, SpineUltrasonic):
-                registerMethods(ACUltrasonic)
+                registerMethods(RCUltrasonic)
             elif isinstance(appendage, SpineVelocityControlledMotor):
-                registerMethods(ACVelocityControlledMotor)
+                registerMethods(RCVelocityControlledMotor)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
@@ -166,8 +166,8 @@ class ArduinoCom(Cmd):
 
 
 if __name__ == '__main__':
-    ac = ArduinoCom()
-    ac.debug = True
-    ac.case_insensitive = True
+    rc = ArduinoCom()
+    rc.debug = True
+    rc.case_insensitive = True
     logging.disable(logging.INFO)
-    ac.cmdloop()
+    rc.cmdloop()
