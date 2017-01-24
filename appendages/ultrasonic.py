@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+
+from .units import Length
+
+
 class Ultrasonic:
     def interact(self, parseResults):
         def help(name):
@@ -28,7 +33,7 @@ class Ultrasonic:
                 return
 
             val = self.s.get_appendage(name).read()
-            print("{}: {} cm".format(name, val.base_value))
+            print("{}: {} cm".format(name, val.to(Length.cm)))
 
         else:
             help(name)
