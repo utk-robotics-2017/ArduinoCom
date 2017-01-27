@@ -13,21 +13,16 @@ except ImportError as err:
 rc_dict = {}
 
 # RipCom-specific things.
-try:
-    current_search_path = os.path.dirname(os.path.realpath(__file__)) + "appendages"
-    current_import_path = "appendages"
-    file_list = []
-    for f in os.listdir(current_search_path):
-        if os.path.isfile(current_search_path + f) and f[-3:] == ".py" and not f == "__init__.py":
-            file_list.append(f)
-    for f in file_list:
-        module = importlib.import_module("{0:s}.{1:s}".format(current_import_path, f[:-3]))
-        class_name = f[:-3].replace('_', ' ').title().replace(' ', '')
-        rc_dict[class_name] = getattr(module, class_name)
-except ImportError as err:
-    print("Couldn't import a rip_com appendage.")
-    print("This should be reported to the rip_com maintainer(s):")
-    print(str(err))
+current_search_path = os.path.dirname(os.path.realpath(__file__)) + "appendages"
+current_import_path = "appendages"
+file_list = []
+for f in os.listdir(current_search_path):
+    if os.path.isfile(current_search_path + f) and f[-3:] == ".py" and not f == "__init__.py":
+        file_list.append(f)
+for f in file_list:
+    module = importlib.import_module("{0:s}.{1:s}".format(current_import_path, f[:-3]))
+    class_name = f[:-3].replace('_', ' ').title().replace(' ', '')
+    rc_dict[class_name] = getattr(module, class_name)
 
 # Points to the current robot's code.
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
