@@ -72,12 +72,10 @@ class ArduinoCom(Cmd):
             self.__dict__["complete_" + name] = types.MethodType(RCClass.complete, self)
 
         for name, appendage in self.appendages.items():
-            found = False
-            for key, value in spine_dict.items():
-                if appendage.__class__.__name__ in rc_dict:
-                    registerMethods(rc_dict[key])
-                else:
-                    print("{0:s} not found among RC imports", appendage.label)
+            if appendage.__class__.__name__ in rc_dict:
+                registerMethods(rc_dict[key])
+            else:
+                print("{0:s} not found among RC imports", appendage.label)
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
