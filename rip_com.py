@@ -13,7 +13,7 @@ except ImportError as err:
 rc_dict = {}
 
 # RipCom-specific things.
-current_search_path = os.path.dirname(os.path.realpath(__file__)) + "appendages"
+current_search_path = os.path.dirname(os.path.realpath(__file__)) + "/appendages"
 current_import_path = "appendages"
 file_list = []
 for f in os.listdir(current_search_path):
