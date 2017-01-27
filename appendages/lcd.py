@@ -1,4 +1,5 @@
-# arduino_com, rip, rip_com
+#!/usr/bin/env python3
+
 
 class Lcd:
     def interact(self, parseResults):
@@ -10,12 +11,21 @@ class Lcd:
 
         if len(args) == 0:
             help(name)
+
         elif args[0] == "write":
-            self.s.get_appendage(name). # whatever in rip
+            if len(args) < 2:
+                help(name)
+                return
+            self.message = " ".join(args[1:])
+            print("Writing message to LCD: " + self.message)
+            self.s.get_appendage(name).write(self.message)  # TODO name in rip.spine
+
         elif args[0] == "clear":
+            self.s.get_appendage(name).write(" ")
+
         else:
             help(name)
-            
+
     def help(self):
         print("usage: <lcd:str> write <value:str>")
         print("       <lcd:str> clear")
