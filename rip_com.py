@@ -10,6 +10,8 @@ try:
 except ImportError as err:
     print("Maybe you should pip3 install cmd2 (the better cmd class)")
 
+from rip.head.spine.core import get_spine
+
 rc_dict = {}
 
 # RipCom-specific things.
