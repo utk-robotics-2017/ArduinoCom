@@ -18,10 +18,24 @@ class Lcd:
                 return
             self.message = " ".join(args[1:])
             print("Writing message to LCD: " + self.message)
-            self.s.get_appendage(name).write(self.message)  # TODO name in rip.spine
+            self.s.get_appendage(name).write(self.message)
 
         elif args[0] == "clear":
-            self.s.get_appendage(name).write(" ")
+            self.s.get_appendage(name).clear()
+
+        elif args[0] == "writepos":
+            if len(args) < 3:
+                help(name)
+                return
+            try:
+                horizontal = int(args[1])
+                vertical = int(args[2])
+            except ValueError as err:
+                help(name)
+                return
+            self.s.get_appendage(name).setpos(horizontal, vertical)
+            if len(args) > 3:
+                self.s.get_appendage(name).write(args[3:])
 
         else:
             help(name)
@@ -29,6 +43,7 @@ class Lcd:
     def help(self):
         print("usage: <lcd:str> write <value:str>")
         print("       <lcd:str> clear")
+        print("       <lcd:str> writepos <value:int> <value:int> <value:str>")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["write", "clear"] if i.startswith(text)]
+        return [i for i in ["write", "clear", "writepos"] if i.startswith(text)]
