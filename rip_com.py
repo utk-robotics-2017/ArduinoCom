@@ -20,6 +20,7 @@ try:
     from rip.head.spine.appendages.arm import Arm as SpineArm
     from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFourWheelDrive
     from rip.head.spine.appendages.i2c_encoder import I2CEncoder as SpineI2CEncoder
+    from rip.head.spine.appendages.lcd import Lcd as SpineLcd
     from rip.head.spine.appendages.line_sensor import LineSensor as SpineLineSensor
     from rip.head.spine.appendages.pid import Pid as SpinePid
     from rip.head.spine.appendages.stepper import Stepper as SpineStepper
@@ -41,6 +42,7 @@ try:
     from appendages.arm import Arm as RCArm
     from appendages.four_wheel_drive import FourWheelDrive as RCFourWheelDrive
     from appendages.i2c_encoder import I2CEncoder as RCI2CEncoder
+    from appendages.lcd import Lcd as RCLcd
     from appendages.line_sensor import LineSensor as RCLineSensor
     from appendages.pid import Pid as RCPid
     from appendages.stepper import Stepper as RCStepper
@@ -111,6 +113,8 @@ class ArduinoCom(Cmd):
                 registerMethods(RCFourWheelDrive)
             elif isinstance(appendage, SpineI2CEncoder):
                 registerMethods(RCI2CEncoder)
+            elif isinstance(appendage, SpineLcd):
+                registerMethods(RCLcd)
             elif isinstance(appendage, SpineLineSensor):
                 registerMethods(RCLineSensor)
             elif isinstance(appendage, SpinePid):
