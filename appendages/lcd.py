@@ -35,7 +35,8 @@ class Lcd:
                 return
             self.s.get_appendage(name).setpos(horizontal, vertical)
             if len(args) > 3:
-                self.s.get_appendage(name).write(args[3:])
+                self.message = " ".join(args[3:])
+                self.s.get_appendage(name).write(self.message)
 
         else:
             help(name)
