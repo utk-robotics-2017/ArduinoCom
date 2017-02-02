@@ -15,7 +15,8 @@ try:
     from rip.head.spine.appendages.motor import Motor as SpineMotor
     from rip.head.spine.appendages.switch import Switch as SpineSwitch
     from rip.head.spine.appendages.servo import Servo as SpineServo
-    from rip.head.spine.appendages.electronic_component_detector import ElectronicComponentDetector as SpineElectronicComponentDetector
+    from rip.head.spine.appendages.electronic_component_detector \
+        import ElectronicComponentDetector as SpineElectronicComponentDetector
     from rip.head.spine.appendages.encoder import Encoder as SpineEncoder
     from rip.head.spine.appendages.arm import Arm as SpineArm
     from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFourWheelDrive
@@ -25,7 +26,8 @@ try:
     from rip.head.spine.appendages.pid import Pid as SpinePid
     from rip.head.spine.appendages.stepper import Stepper as SpineStepper
     from rip.head.spine.appendages.ultrasonic import Ultrasonic as SpineUltrasonic
-    from rip.head.spine.appendages.velocity_controlled_motor import VelocityControlledMotor as SpineVelocityControlledMotor
+    from rip.head.spine.appendages.velocity_controlled_motor \
+        import VelocityControlledMotor as SpineVelocityControlledMotor
 except ImportError as err:
     print("Unable to import one or more RIP appendages,")
     print("Ensure submodules are up to date, try: git submodule update --init --recursive")
