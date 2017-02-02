@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 class Stepper:
     def interact(self, parseResults):
         def help(name):
@@ -58,4 +61,3 @@ class Stepper:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set_speed", "set_angle", "step"] if i.startswith(text)]
-

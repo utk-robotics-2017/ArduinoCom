@@ -1,4 +1,5 @@
-import time
+#!/usr/bin/env python3
+
 
 class Arm:
     def interact(self, parseResults):
@@ -48,4 +49,3 @@ class Arm:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set", "detach"] if i.startswith(text)]
-

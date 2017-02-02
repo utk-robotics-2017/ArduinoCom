@@ -1,4 +1,5 @@
-import time
+#!/usr/bin/env python3
+
 
 class LineSensor:
     def interact(self, parseResults):
@@ -41,4 +42,3 @@ class LineSensor:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set_value", "read"] if i.startswith(text)]
-

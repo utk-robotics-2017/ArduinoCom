@@ -18,7 +18,7 @@ class ElectronicComponentDetector:
                 pad = 9
             if len(args) == 2:
                 try:
-                    pad = int(arsg[1])
+                    pad = int(args[1])
                 except ValueError:
                     help(name)
                     return
@@ -44,4 +44,3 @@ class ElectronicComponentDetector:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["decode"] if i.startswith(text)]
-

@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 class Pid:
     def interact(self, parseResults):
         def help(name):
@@ -63,4 +66,3 @@ class Pid:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["modify_constants", "set", "off", "display"] if i.startswith(text)]
-

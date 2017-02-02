@@ -76,6 +76,7 @@ class Length(Unit):
     inch = m * 39.3701
     ft = inch * 12.0
 
+
 Distance = Length
 
 
@@ -115,6 +116,7 @@ class Velocity(Unit):
 
     ft_s = Length.ft / Time.s
     ft_minute = Length.ft / Time.minute
+
 
 Speed = Velocity
 

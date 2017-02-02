@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 class Motor:
     def interact(self, parseResults):
         def help(name):
@@ -40,4 +43,3 @@ class Motor:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["drive", "stop"] if i.startswith(text)]
-

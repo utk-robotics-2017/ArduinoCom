@@ -26,7 +26,7 @@ class FourWheelDrive:
                 except ValueError:
                     help(name)
                     return
-                
+
                 self.s.get_appendage(name).drive([left_drive, right_drive])
 
             elif len(args) == 5:
@@ -39,7 +39,8 @@ class FourWheelDrive:
                     help(name)
                     return
 
-                self.s.get_appendage(name).drive([left_front_drive, right_front_drive, left_back_drive, right_back_drive])
+                self.s.get_appendage(name).drive([left_front_drive, right_front_drive,
+                                                 left_back_drive, right_back_drive])
 
             else:
                 help(name)
@@ -82,12 +83,12 @@ class FourWheelDrive:
                     help(name)
                     return
 
-                self.s.get_appendage(name).drive_pid([left_front_drive, right_front_drive, left_back_drive, right_back_drive])
+                self.s.get_appendage(name).drive_pid([left_front_drive, right_front_drive,
+                                                     left_back_drive, right_back_drive])
 
             else:
                 help(name)
                 return
-
 
         elif args[0] == "rotate_pid":
             if len(args) != 3:
@@ -238,4 +239,3 @@ class FourWheelDrive:
                             "get_right_front_velocity", "get_right_back_velocity",
                             "get_left_position", "get_right_position",
                             "set_pid_type", "pid_get", "pid_set"] if i.startswith(text)]
-

@@ -33,4 +33,3 @@ class Encoder:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["read", "zero"] if i.startswith(text)]
-

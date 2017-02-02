@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 class VelocityControlledMotor:
     def interact(self, parseResults):
         def help(name):
@@ -83,5 +86,5 @@ class VelocityControlledMotor:
         print("       <vcm:str> stop")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["drive", "set", "get_velocity", "get_position", "set_position", "stop"] if i.startswith(text)]
-
+        return [i for i in ["drive", "set", "get_velocity", "get_position", "set_position", "stop"]
+                if i.startswith(text)]
