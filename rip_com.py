@@ -19,7 +19,7 @@ current_search_path = os.path.dirname(os.path.realpath(__file__)) + "/appendages
 current_import_path = "appendages"
 file_list = []
 for f in os.listdir(current_search_path):
-    if os.path.isfile(current_search_path + f) and f[-3:] == ".py" and not f == "__init__.py":
+    if os.path.isfile(current_search_path + "/" + f) and f[-3:] == ".py" and not f == "__init__.py" and not f == "units.py":
         file_list.append(f)
 for f in file_list:
     module = importlib.import_module("{0:s}.{1:s}".format(current_import_path, f[:-3]))
@@ -70,9 +70,9 @@ class ArduinoCom(Cmd):
 
         for name, appendage in self.appendages.items():
             if appendage.__class__.__name__ in rc_dict:
-                registerMethods(rc_dict[key])
+                registerMethods(rc_dict[appendage.__class__.__name__])
             else:
-                print("{0:s} not found among RC imports", appendage.label)
+                print("{0:s} not found among RC imports".format(appendage.label))
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")
