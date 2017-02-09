@@ -47,10 +47,19 @@ class Lcd:
             except ValueError as err:
                 help(name)
                 return
+            # setpos is vertical, horizontal
             self.s.get_appendage(name).setpos(line, 0)
             if len(args) > 2:
                 self.message = " ".join(args[2:])
                 self.s.get_appendage(name).write(self.message)
+
+        elif args[0] == "read":
+            if len(args) > 1:
+                help(name)
+            try:
+                print(self.s.get_appendage(name).get_message())
+            except Exception as err:
+                print("lol ther waz exceptshun: " + str(err))
 
         else:
             help(name)
@@ -58,8 +67,14 @@ class Lcd:
     def help(self):
         print("usage: <lcd:str> write <value:str>")
         print("       <lcd:str> clear")
+        print("       <lcd:str> read")
         print("       <lcd:str> writeln <value:int> ?<value:str>")
         print("       <lcd:str> writepos <value:int> <value:int> ?<value:str>")
+        print("Notes: ")
+        print("    read is software-side only, not accurate to real life.")
+        print("    write is the raw write, subject to cursor position")
+        print("    writepos calls setpos then write, function in rip_com not rip")
+        print("     -> pass no message to writepos for direct access to setpos")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["write", "clear", "writepos", "writeln"] if i.startswith(text)]
+        return [i for i in ["write", "clear", "writepos", "writeln", "read"] if i.startswith(text)]
