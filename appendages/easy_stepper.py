@@ -18,7 +18,7 @@ class EasyStepper:
                 return
 
             try:
-                val = long(args[1])
+                val = int(args[1])
             except ValueError:
                 help(name)
                 return
@@ -55,9 +55,9 @@ class EasyStepper:
             help(name)
 
     def help(self):
-        print("usage: <stepper:str> set_speed <speed:float>")
-        print("       <stepper:str> set_angle <angle:float>")
+        print("usage: <stepper:str> set_speed <speed:int> ( >= 53 )")
+        print("       <stepper:str> step_angle <angle:int>")
         print("       <stepper:str> step <steps:int>")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["set_speed", "set_angle", "step"] if i.startswith(text)]
+        return [i for i in ["set_speed", "step_angle", "step"] if i.startswith(text)]
