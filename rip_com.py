@@ -3,55 +3,28 @@
 import os
 import types
 import logging
+import importlib
 
 try:
     from cmd2 import Cmd  # , options, make_option
 except ImportError as err:
     print("Maybe you should pip3 install cmd2 (the better cmd class)")
 
-try:
-    from rip.head.spine.core import get_spine
+from rip.head.spine.core import get_spine
 
-    from rip.head.spine.appendages.motor import Motor as SpineMotor
-    from rip.head.spine.appendages.switch import Switch as SpineSwitch
-    from rip.head.spine.appendages.servo import Servo as SpineServo
-    from rip.head.spine.appendages.electronic_component_detector import ElectronicComponentDetector as SpineElectronicComponentDetector
-    from rip.head.spine.appendages.encoder import Encoder as SpineEncoder
-    from rip.head.spine.appendages.arm import Arm as SpineArm
-    from rip.head.spine.appendages.four_wheel_drive import FourWheelDrive as SpineFourWheelDrive
-    from rip.head.spine.appendages.i2c_encoder import I2CEncoder as SpineI2CEncoder
-    from rip.head.spine.appendages.lcd import Lcd as SpineLcd
-    from rip.head.spine.appendages.line_sensor import LineSensor as SpineLineSensor
-    from rip.head.spine.appendages.pid import Pid as SpinePid
-    from rip.head.spine.appendages.stepper import Stepper as SpineStepper
-    from rip.head.spine.appendages.ultrasonic import Ultrasonic as SpineUltrasonic
-    from rip.head.spine.appendages.velocity_controlled_motor import VelocityControlledMotor as SpineVelocityControlledMotor
-except ImportError as err:
-    print("Unable to import one or more RIP appendages,")
-    print("Ensure submodules are up to date, try: git submodule update --init --recursive")
-    print("Ensure imports can find the RIP instance,\n envvar PYTHONPATH=\"path/to/folder/with/rip\" can be used.")
-    print("Specific Error: " + str(err))
+rc_dict = {}
 
 # RipCom-specific things.
-try:
-    from appendages.motor import Motor as RCMotor
-    from appendages.switch import Switch as RCSwitch
-    from appendages.servo import Servo as RCServo
-    from appendages.electronic_component_detector import ElectronicComponentDetector as RCElectronicComponentDetector
-    from appendages.encoder import Encoder as RCEncoder
-    from appendages.arm import Arm as RCArm
-    from appendages.four_wheel_drive import FourWheelDrive as RCFourWheelDrive
-    from appendages.i2c_encoder import I2CEncoder as RCI2CEncoder
-    from appendages.lcd import Lcd as RCLcd
-    from appendages.line_sensor import LineSensor as RCLineSensor
-    from appendages.pid import Pid as RCPid
-    from appendages.stepper import Stepper as RCStepper
-    from appendages.ultrasonic import Ultrasonic as RCUltrasonic
-    from appendages.velocity_controlled_motor import VelocityControlledMotor as RCVelocityControlledMotor
-except ImportError as err:
-    print("Couldn't import a rip_com appendage.")
-    print("This should be reported to the rip_com maintainer(s):")
-    print(str(err))
+current_search_path = os.path.dirname(os.path.realpath(__file__)) + "/appendages"
+current_import_path = "appendages"
+file_list = []
+for f in os.listdir(current_search_path):
+    if os.path.isfile(current_search_path + "/" + f) and f[-3:] == ".py" and not f == "__init__.py" and not f == "units.py":
+        file_list.append(f)
+for f in file_list:
+    module = importlib.import_module("{0:s}.{1:s}".format(current_import_path, f[:-3]))
+    class_name = f[:-3].replace('_', ' ').title().replace(' ', '')
+    rc_dict[class_name] = getattr(module, class_name)
 
 # Points to the current robot's code.
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
@@ -95,36 +68,11 @@ class ArduinoCom(Cmd):
             self.__dict__["help_" + name] = types.MethodType(RCClass.help, self)
             self.__dict__["complete_" + name] = types.MethodType(RCClass.complete, self)
 
-        # TODO There should be a better way to do this than to register each one hardcoded.
         for name, appendage in self.appendages.items():
-            if isinstance(appendage, SpineMotor):
-                registerMethods(RCMotor)
-            elif isinstance(appendage, SpineSwitch):
-                registerMethods(RCSwitch)
-            elif isinstance(appendage, SpineServo):
-                registerMethods(RCServo)
-            elif isinstance(appendage, SpineElectronicComponentDetector):
-                registerMethods(RCElectronicComponentDetector)
-            elif isinstance(appendage, SpineEncoder):
-                registerMethods(RCEncoder)
-            elif isinstance(appendage, SpineArm):
-                registerMethods(RCArm)
-            elif isinstance(appendage, SpineFourWheelDrive):
-                registerMethods(RCFourWheelDrive)
-            elif isinstance(appendage, SpineI2CEncoder):
-                registerMethods(RCI2CEncoder)
-            elif isinstance(appendage, SpineLcd):
-                registerMethods(RCLcd)
-            elif isinstance(appendage, SpineLineSensor):
-                registerMethods(RCLineSensor)
-            elif isinstance(appendage, SpinePid):
-                registerMethods(RCPid)
-            elif isinstance(appendage, SpineStepper):
-                registerMethods(RCStepper)
-            elif isinstance(appendage, SpineUltrasonic):
-                registerMethods(RCUltrasonic)
-            elif isinstance(appendage, SpineVelocityControlledMotor):
-                registerMethods(RCVelocityControlledMotor)
+            if appendage.__class__.__name__ in rc_dict:
+                registerMethods(rc_dict[appendage.__class__.__name__])
+            else:
+                print("{0:s} not found among RC imports".format(appendage.label))
 
     def help_connect(self):
         print("usage: connect <ArduinoName>")

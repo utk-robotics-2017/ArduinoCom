@@ -1,4 +1,5 @@
-import time
+#!/usr/bin/env python3
+
 
 class Servo:
     def interact(self, parseResults):
@@ -42,4 +43,3 @@ class Servo:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set", "detach"] if i.startswith(text)]
-

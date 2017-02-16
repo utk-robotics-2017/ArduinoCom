@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-class LineSensor:
+class SoftwarePwm:
     def interact(self, parseResults):
         def help(name):
             self.__dict__["help_" + name]()
@@ -11,8 +11,7 @@ class LineSensor:
 
         if len(args) == 0:
             help(name)
-
-        elif args[0] == "set_value":
+        elif args[0] == "set_pwm":
             if len(args) != 2:
                 help(name)
                 return
@@ -23,22 +22,13 @@ class LineSensor:
                 help(name)
                 return
 
-            self.s.get_appendage(name).set_value(val)
-
-        elif args[0] == "read":
-            if len(args) != 1:
-                help(name)
-                return
-
-            val = self.s.get_appendage(name).read()
-            print("{}: {}".format(name, val))
+            self.s.get_appendage(name).set_pwm(val)
 
         else:
             help(name)
 
     def help(self):
-        print("       <line_sensor:str> set_value <value:int>")
-        print("       <line_sensor:str> read")
+        print("usage: <stepper:str> set_pwm <value:int>")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["set_value", "read"] if i.startswith(text)]
+        return [i for i in ["set_pwm"] if i.startswith(text)]

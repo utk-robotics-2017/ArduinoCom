@@ -117,4 +117,3 @@ class I2CEncoder:
         return [i for i in ["set_pid_source", "get_position", "set_position",
                             "raw_position", "get_speed", "set_velocity",
                             "get_velocity", "zero", "pid_get"] if i.startswith(text)]
-

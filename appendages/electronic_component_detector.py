@@ -53,4 +53,3 @@ class ElectronicComponentDetector:
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["decode"] if i.startswith(text)]
-
