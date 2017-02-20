@@ -122,6 +122,40 @@ class ArduinoCom(Cmd):
     def help_list(self):
         print("Lists the currently connected arduinos")
 
+    def do_rmlock(self, parseResults):
+        self.refreshDevices()
+        arduinoName = parseResults.parsed[1]
+
+        if arduinoName != "":
+            if arduinoName in self.lockedDevices:
+                try:
+                    os.remove("/var/lock/{0:s}.lck".format(arduinoName))
+                    print("Removed the {0:s} lockfile.".format(arduinoName))
+                except PermissionError:
+                    print("You don't have permission to remove the {0:s} lockfile.".format(arduinoName))
+            elif arduinoName in self.connectedDevices:
+                print("{0:s} is not locked.".format(arduinoName))
+            elif arduinoName in self.registeredDevices:
+                print("{0:s} is not connected.".format(arduinoName))
+            else:
+                print("{0:s} is not registered.".format(arduinoName))
+        else:
+            for arduinoName in self.lockedDevices:
+                try:
+                    os.remove("/var/lock/{0:s}.lck".format(arduinoName))
+                    print("Removed the {0:s} lockfile.".format(arduinoName))
+                except PermissionError:
+                    print("You don't have permission to remove the {0:s} lockfile.".format(arduinoName))
+
+    def help_rmlock(self):
+        print("Removes lockfiles for connected devices.")
+        print("If no device name is specified, removes all lockfiles.\n")
+        print("usage: rmlock")
+        print("       rmlock <device:str>")
+
+    def complete_rmlock(self, text, line, begidx, endidx):
+        return [i for i in self.lockedDevices if i.startswith(text)]
+
     def do_exit(self, parseResults):
         self.do_disconnect(None)
         return True
