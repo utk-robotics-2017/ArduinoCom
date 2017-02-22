@@ -38,6 +38,7 @@ class ArduinoCom(Cmd):
     gs = None
     s = None
     appendages = None
+    device = None
 
     def __init__(self):
         super().__init__()
@@ -89,6 +90,8 @@ class ArduinoCom(Cmd):
             else:
                 print("{0:s} not found among RC imports".format(appendage.label))
 
+        self.device = arduinoName
+
     def help_connect(self):
         print("usage: connect <ArduinoName>")
         print("Normally, ArduinoName could be something as simple as 'mega'")
@@ -127,7 +130,9 @@ class ArduinoCom(Cmd):
         arduinoName = parseResults.parsed[1]
 
         if arduinoName != "":
-            if arduinoName in self.lockedDevices:
+            if arduinoName == self.device:
+                print("You are currently connected to {0:s}, lockfile not removed.".format(arduinoName))
+            elif arduinoName in self.lockedDevices:
                 try:
                     os.remove("/var/lock/{0:s}.lck".format(arduinoName))
                     print("Removed the {0:s} lockfile.".format(arduinoName))
@@ -141,11 +146,14 @@ class ArduinoCom(Cmd):
                 print("{0:s} is not registered.".format(arduinoName))
         else:
             for arduinoName in self.lockedDevices:
-                try:
-                    os.remove("/var/lock/{0:s}.lck".format(arduinoName))
-                    print("Removed the {0:s} lockfile.".format(arduinoName))
-                except PermissionError:
-                    print("You don't have permission to remove the {0:s} lockfile.".format(arduinoName))
+                if arduinoName == self.device:
+                    print("You are currently connected to {0:s}, lockfile not removed.".format(arduinoName))
+                else:
+                    try:
+                        os.remove("/var/lock/{0:s}.lck".format(arduinoName))
+                        print("Removed the {0:s} lockfile.".format(arduinoName))
+                    except PermissionError:
+                        print("You don't have permission to remove the {0:s} lockfile.".format(arduinoName))
 
     def help_rmlock(self):
         print("Removes lockfiles for connected devices.")
