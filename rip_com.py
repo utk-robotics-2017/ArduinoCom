@@ -38,17 +38,33 @@ class ArduinoCom(Cmd):
     gs = None
     s = None
     appendages = None
+    device = None
 
     def __init__(self):
         super().__init__()
+        self.refreshDevices()
+
+    def refreshDevices(self):
         self.registeredDevices = [d for d in os.listdir(CURRENT_ARDUINO_CODE_DIR)
                                   if os.path.isdir("{0:s}/{1:s}".format(CURRENT_ARDUINO_CODE_DIR, d)) and
                                   not d == ".git" and os.path.exists("{0:s}/{1:s}/{1:s}.json"
                                                                      .format(CURRENT_ARDUINO_CODE_DIR, d))]
+        if len(self.registeredDevices) != 0:
+            self.registeredDevices.sort()
+
         self.connectedDevices = [d for d in self.registeredDevices
                                  if os.path.exists("/dev/{0:s}".format(d))]
+        if len(self.connectedDevices) != 0:
+            self.connectedDevices.sort()
+
+        self.lockedDevices = [d for d in self.connectedDevices
+                              if os.path.exists("/var/lock/{0:s}.lck".format(d))]
+        if len(self.lockedDevices) != 0:
+            self.lockedDevices.sort()
 
     def do_connect(self, parseResults):
+        self.refreshDevices()
+
         args = parseResults.parsed[1].split()
         if len(args) != 1:
             self.help_connect()
@@ -74,6 +90,8 @@ class ArduinoCom(Cmd):
             else:
                 print("{0:s} not found among RC imports".format(appendage.label))
 
+        self.device = arduinoName
+
     def help_connect(self):
         print("usage: connect <ArduinoName>")
         print("Normally, ArduinoName could be something as simple as 'mega'")
@@ -96,6 +114,55 @@ class ArduinoCom(Cmd):
     def help_disconnect(self):
         print("usage: disconnect")
         print("Disconnects from a connected arduino.")
+
+    def do_list(self, parseResults):
+        self.refreshDevices()
+        self.print_topics("Connected Devices", self.connectedDevices, 15, 80)
+        self.print_topics("Locked Devices", self.lockedDevices, 15, 80)
+    do_li = do_list
+    do_l = do_list
+
+    def help_list(self):
+        print("Lists the currently connected arduinos")
+
+    def do_rmlock(self, parseResults):
+        self.refreshDevices()
+        arduinoName = parseResults.parsed[1]
+
+        if arduinoName != "":
+            if arduinoName == self.device:
+                print("You are currently connected to {0:s}, lockfile not removed.".format(arduinoName))
+            elif arduinoName in self.lockedDevices:
+                try:
+                    os.remove("/var/lock/{0:s}.lck".format(arduinoName))
+                    print("Removed the {0:s} lockfile.".format(arduinoName))
+                except PermissionError:
+                    print("You don't have permission to remove the {0:s} lockfile.".format(arduinoName))
+            elif arduinoName in self.connectedDevices:
+                print("{0:s} is not locked.".format(arduinoName))
+            elif arduinoName in self.registeredDevices:
+                print("{0:s} is not connected.".format(arduinoName))
+            else:
+                print("{0:s} is not registered.".format(arduinoName))
+        else:
+            for arduinoName in self.lockedDevices:
+                if arduinoName == self.device:
+                    print("You are currently connected to {0:s}, lockfile not removed.".format(arduinoName))
+                else:
+                    try:
+                        os.remove("/var/lock/{0:s}.lck".format(arduinoName))
+                        print("Removed the {0:s} lockfile.".format(arduinoName))
+                    except PermissionError:
+                        print("You don't have permission to remove the {0:s} lockfile.".format(arduinoName))
+
+    def help_rmlock(self):
+        print("Removes lockfiles for connected devices.")
+        print("If no device name is specified, removes all lockfiles.\n")
+        print("usage: rmlock")
+        print("       rmlock <device:str>")
+
+    def complete_rmlock(self, text, line, begidx, endidx):
+        return [i for i in self.lockedDevices if i.startswith(text)]
 
     def do_exit(self, parseResults):
         self.do_disconnect(None)
