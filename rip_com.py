@@ -30,7 +30,7 @@ for f in file_list:
 CURRENT_ARDUINO_CODE_DIR = "/Robot/CurrentArduinoCode"
 
 
-class ArduinoCom(Cmd):
+class rip_com(Cmd):
     intro = "Welcome to RipCom. Type help or ? for commands.\nCtrl-D to exit."
     prompt = "[RC]> "
     doc_header = "Documentation available for:"
@@ -196,7 +196,7 @@ class ArduinoCom(Cmd):
 # Initializes the command interface loop on the terminal.
 # Uses __main__ detection so that this file can be used as an import from other pys.
 if __name__ == '__main__':
-    rc = ArduinoCom()
+    rc = rip_com()
     rc.debug = True
     rc.case_insensitive = True
     logging.disable(logging.INFO)
