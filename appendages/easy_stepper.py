@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-# this is a temporary comment to get git to push?
 
 class EasyStepper:
     def interact(self, parseResults):
@@ -27,7 +26,7 @@ class EasyStepper:
             self.s.get_appendage(name).set_speed(val)
 
         elif args[0] == "step_angle":
-            if len(args) != 2:
+            if len(args) is not 2 and len(args) is not 3:
                 help(name)
                 return
 
@@ -37,10 +36,18 @@ class EasyStepper:
                 help(name)
                 return
 
-            self.s.get_appendage(name).step_angle(val)
+            if len(args) is 3:
+                try:
+                    timeout = float(args[2])
+                except ValueError:
+                    help(name)
+                    return
+                self.s.get_appendage(name).step_angle(val, timeout=timeout)
+            else:
+                self.s.get_appendage(name).step_angle(val)
 
         elif args[0] == "step":
-            if len(args) != 2:
+            if len(args) is not 2 and len(args) is not 3:
                 help(name)
                 return
 
@@ -50,15 +57,23 @@ class EasyStepper:
                 help(name)
                 return
 
-            self.s.get_appendage(name).step(val)
+            if len(args) is 3:
+                try:
+                    timeout = float(args[2])
+                except ValueError:
+                    help(name)
+                    return
+                self.s.get_appendage(name).step(val, timeout=timeout)
+            else:
+                self.s.get_appendage(name).step(val)
 
         else:
             help(name)
 
     def help(self):
         print("usage: <stepper:str> set_speed <speed:int> ( >= 53 )")
-        print("       <stepper:str> step_angle <angle:int>")
-        print("       <stepper:str> step <steps:int>")
+        print("       <stepper:str> step_angle <angle:int> ?<timeout:float>")
+        print("       <stepper:str> step <steps:int> ?<timeout:float>")
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set_speed", "step_angle", "step"] if i.startswith(text)]
