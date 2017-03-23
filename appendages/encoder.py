@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 class Encoder:
     def interact(self, parseResults):
         def help(name):
@@ -14,8 +17,9 @@ class Encoder:
                 help(name)
                 return
 
-            val = self.s.get_appendage(name).read()
-            print("{}: {}".format(name, val))
+            angle = self.s.get_appendage(name).read()
+            value = angle.base_value
+            print("{}: {}".format(name, value))
 
         elif args[0] == "zero":
             if len(args) != 1:
