@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+
+from .units import Angle, AngularVelocity
+
+
 class I2CEncoder:
     def interact(self, parseResults):
         def help(name):
@@ -28,7 +33,7 @@ class I2CEncoder:
                 return
 
             val = self.s.get_appendage(name).get_position()
-            print("{}: {}".format(name, val))
+            print("{}: {}".format(name, val.base_value))
 
         elif args[0] == "set_position":
             if len(args) != 2:
@@ -49,7 +54,7 @@ class I2CEncoder:
                 return
 
             val = self.s.get_appendage(name).raw_position()
-            print("{}: {}".format(name, val))
+            print("{}: {}".format(name, val.base_value))
 
         elif args[0] == "get_speed":
             if len(args) != 1:
@@ -57,7 +62,7 @@ class I2CEncoder:
                 return
 
             val = self.s.get_appendage(name).get_speed()
-            print("{}: {}".format(name, val))
+            print("{}: {}".format(name, val.base_value))
 
         elif args[0] == "set_velocity":
             if len(args) != 2:
@@ -78,7 +83,7 @@ class I2CEncoder:
                 return
 
             val = self.s.get_appendage(name).get_velocity()
-            print("{}: {}".format(name, val))
+            print("{}: {}".format(name, val.base_value))
 
         elif args[0] == "zero":
             if len(args) != 1:
@@ -93,7 +98,7 @@ class I2CEncoder:
                 return
 
             val = self.s.get_appendage(name).pid_get()
-            print("{}: {}".format(name, val))
+            print("{}: {}".format(name, val.base_value))
 
         else:
             help(name)
