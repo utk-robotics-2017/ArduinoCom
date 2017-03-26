@@ -1,0 +1,12 @@
+language: python
+python:
+- '3.4' # version on robot
+
+git:
+    submodules: false
+
+install:
+  - pip3 install flake8
+
+script:
+  - flake8 --ignore=E501 *.py appendages/*.py
