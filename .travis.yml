@@ -3,6 +3,9 @@ python:
 - '3.3'
 - pypy
 
+git:
+    submodules: false
+
 install:
   - pip3 install flake8
 
