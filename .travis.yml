@@ -1,0 +1,11 @@
+language: python
+python:
+- '2.7'
+- '3.3'
+- pypy
+
+install:
+  - pip3 install flake8
+
+script:
+  - flake8 --ignore=E501 *.py appendages/*.py
