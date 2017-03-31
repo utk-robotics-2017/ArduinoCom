@@ -38,13 +38,18 @@ class PositionControlledMotor:
 
             self.s.get_appendage(name).set_position(val)
 
-        elif args[0] == "get_velocity":
-            if len(args) != 1:
+        elif args[0] == "set_allowed_direction":
+            if len(args) != 2:
                 help(name)
                 return
 
-            val = self.s.get_appendage(name).get_velocity()
-            print("{}: {}".format(name, val))
+            try:
+                val = int(args[1])
+            except ValueError:
+                help(name)
+                return
+
+            self.s.get_appendage(name).set_allowed_direction(val)
 
         elif args[0] == "get_position":
             if len(args) != 1:
