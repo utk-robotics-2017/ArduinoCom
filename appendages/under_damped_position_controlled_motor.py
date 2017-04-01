@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-class PositionControlledMotor:
+class UnderDampedPositionControlledMotor:
     def interact(self, parseResults):
         def help(name):
             self.__dict__["help_" + name]()
@@ -43,11 +43,20 @@ class PositionControlledMotor:
                 help(name)
                 return
 
-            try:
-                val = int(args[1])
-            except ValueError:
-                help(name)
-                return
+            if args[1] == "DIRECT":
+                val = 0
+            elif args[1] == "FORWARD":
+                val = 0
+            elif args[1] == "REVERSE":
+                val = 1
+            else:
+                try:
+                    val = int(args[1])
+                except ValueError:
+                    help(name)
+                    return
+                if val != 0:
+                    val = 1
 
             self.s.get_appendage(name).set_allowed_direction(val)
 
@@ -57,7 +66,16 @@ class PositionControlledMotor:
                 return
 
             val = self.s.get_appendage(name).get_position()
-            print("{}: {}".format(name, val))
+            print("{}: {} degrees".format(name, val.base_value))
+
+
+        elif args[0] == "get_velocity":
+            if len(args) != 1:
+                help(name)
+                return
+
+            val = self.s.get_appendage(name).get_velocity()
+            print("{}: {} rpms".format(name, val.base_value))
 
         elif args[0] == "stop":
             if len(args) != 1:
@@ -70,10 +88,15 @@ class PositionControlledMotor:
             help(name)
 
     def help(self):
-        print("usage: <pcm:str> set_voltage <voltage:int>")
-        print("       <pcm:str> set_position <position:float>")
-        print("       <pcm:str> get_position")
-        print("       <pcm:str> stop")
+        print("usage: <udpcm:str> set_voltage <voltage:int>")
+        print("       <udpcm:str> set_position <position:float>")
+        print("       <udpcm:str> set_allow_direction <direction:str|int>")
+        print("       <udpcm:str> get_position")
+        print("       <udpcm:str> get_velocity")
+        print("       <udpcm:str> stop")
+        print()
+        print("direction: \"DIRECT|FORWARD|REVERSE\"")
+        print("           0|1")
 
     def complete(self, text, line, begidx, endidx):
         return [i for i in ["set_voltage", "get_position", "set_position", "stop"]
