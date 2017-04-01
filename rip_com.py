@@ -69,13 +69,13 @@ class rip_com(Cmd):
         if len(args) != 1:
             self.help_connect()
             return
-        arduinoName = args[0]
 
-        if arduinoName not in self.connectedDevices:
-            print("Arduino \"{}\" is not available.".format(arduinoName))
-            return
+        for aurduinoName in args:
+            if arduinoName not in self.connectedDevices:
+                print("Arduino \"{}\" is not available.".format(arduinoName))
+                return
 
-        self.gs = get_spine(devices=[arduinoName])
+        self.gs = get_spine(devices=[args])
         self.s = self.gs.__enter__()
         self.appendages = self.s.get_appendage_dict()
 
@@ -93,7 +93,7 @@ class rip_com(Cmd):
         self.device = arduinoName
 
     def help_connect(self):
-        print("usage: connect <ArduinoName>")
+        print("usage: connect <ArduinoNames...>")
         print("Normally, ArduinoName could be something as simple as 'mega'")
 
     def complete_connect(self, text, line, begidx, endidx):
