@@ -60,6 +60,24 @@ class UnderDampedPositionControlledMotor:
 
             self.s.get_appendage(name).set_allowed_direction(val)
 
+        elif args[0] == "set_mode":
+            if len(args) != 2:
+                help(name)
+                return
+
+            if args[1] == "MANUAL":
+                val = 0
+            elif args[1] == "AUTO":
+                val = 1
+            else:
+                try:
+                    val = int(args[1])
+                except ValueError:
+                    help(name)
+                    return
+
+            self.s.get_appendage(name).set_mode(val)
+
         elif args[0] == "get_position":
             if len(args) != 1:
                 help(name)
@@ -90,14 +108,17 @@ class UnderDampedPositionControlledMotor:
     def help(self):
         print("usage: <udpcm:str> set_voltage <voltage:int>")
         print("       <udpcm:str> set_position <position:float>")
-        print("       <udpcm:str> set_allow_direction <direction:str|int>")
+        print("       <udpcm:str> set_allowed_direction <direction:str|int>")
+        print("       <udpcm:str> set_mode <mode:str|int>")
         print("       <udpcm:str> get_position")
         print("       <udpcm:str> get_velocity")
         print("       <udpcm:str> stop")
         print()
         print("direction: \"DIRECT|FORWARD|REVERSE\"")
         print("           0|1")
+        print("mode: \"MANUAL|AUTO\"")
+        print("      0|1")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["set_voltage", "get_position", "set_position", "stop"]
+        return [i for i in ["set_voltage", "get_position", "set_position", "set_allowed_direction", "set_mode", "get_position", "stop"]
                 if i.startswith(text)]
