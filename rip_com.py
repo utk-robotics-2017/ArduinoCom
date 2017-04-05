@@ -19,7 +19,7 @@ current_search_path = os.path.dirname(os.path.realpath(__file__)) + "/appendages
 current_import_path = "appendages"
 file_list = []
 for f in os.listdir(current_search_path):
-    if os.path.isfile(current_search_path + "/" + f) and f[-3:] == ".py" and not f == "__init__.py" and not f == "units.py":
+    if os.path.isfile(current_search_path + "/" + f) and f[-3:] == ".py" and f not in ["__init__.py", "units.py"]:
         file_list.append(f)
 for f in file_list:
     module = importlib.import_module("{0:s}.{1:s}".format(current_import_path, f[:-3]))
@@ -119,8 +119,6 @@ class rip_com(Cmd):
         self.refreshDevices()
         self.print_topics("Connected Devices", self.connectedDevices, 15, 80)
         self.print_topics("Locked Devices", self.lockedDevices, 15, 80)
-    do_li = do_list
-    do_l = do_list
 
     def help_list(self):
         print("Lists the currently connected arduinos")
