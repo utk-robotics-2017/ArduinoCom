@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from .units import Angle, AngularVelocity
-
 
 class I2CEncoder:
     def interact(self, parseResults):
@@ -33,20 +31,7 @@ class I2CEncoder:
                 return
 
             val = self.s.get_appendage(name).get_position()
-            print("{}: {}".format(name, val.base_value))
-
-        elif args[0] == "set_position":
-            if len(args) != 2:
-                help(name)
-                return
-
-            try:
-                pos = float(args[1])
-            except ValueError:
-                help(name)
-                return
-
-            self.s.get_appendage(name).set_position(Angle(pos, Angle.rev))
+            print("{}: {:.2f}".format(name, val.base_value))
 
         elif args[0] == "raw_position":
             if len(args) != 1:
@@ -54,7 +39,7 @@ class I2CEncoder:
                 return
 
             val = self.s.get_appendage(name).raw_position()
-            print("{}: {}".format(name, val.base_value))
+            print("{}: {:d}".format(name, int(val)))
 
         elif args[0] == "get_speed":
             if len(args) != 1:
@@ -63,19 +48,6 @@ class I2CEncoder:
 
             val = self.s.get_appendage(name).get_speed()
             print("{}: {}".format(name, val.base_value))
-
-        elif args[0] == "set_velocity":
-            if len(args) != 2:
-                help(name)
-                return
-
-            try:
-                vel = float(args[1])
-            except ValueError:
-                help(name)
-                return
-
-            self.s.get_appendage(name).set_velocity(AngularVelocity(vel, AngularVelocity.rpm))
 
         elif args[0] == "get_velocity":
             if len(args) != 1:
@@ -106,19 +78,18 @@ class I2CEncoder:
     def help(self):
         print("usage: <i2c_encoder:str> set_pid_source <source:str>")
         print("       <i2c_encoder:str> get_position")
-        print("       <i2c_encoder:str> set_position <position:float>")
         print("       <i2c_encoder:str> raw_position")
         print("       <i2c_encoder:str> get_speed")
-        print("       <i2c_encoder:str> set_velocity <velocity:float>")
         print("       <i2c_encoder:str> get_velocity")
         print("       <i2c_encoder:str> zero")
         print("       <i2c_encoder:str> pid_get")
         print("")
-        print("pid_source: [\"position\", \"velocity\"]")
-        print("position: rev")
-        print("velocity: rpm")
+        print("pid_source:   [\"position\", \"velocity\"]")
+        print("position:     degrees")
+        print("raw_position: ticks")
+        print("velocity:     rpm")
 
     def complete(self, text, line, begidx, endidx):
-        return [i for i in ["set_pid_source", "get_position", "set_position",
-                            "raw_position", "get_speed", "set_velocity",
+        return [i for i in ["set_pid_source", "get_position",
+                            "raw_position", "get_speed",
                             "get_velocity", "zero", "pid_get"] if i.startswith(text)]
