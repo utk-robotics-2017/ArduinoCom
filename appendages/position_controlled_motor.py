@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from .units import Angle
+
 
 class PositionControlledMotor:
     def interact(self, parseResults):
@@ -36,15 +38,7 @@ class PositionControlledMotor:
                 help(name)
                 return
 
-            self.s.get_appendage(name).set_position(val)
-
-        elif args[0] == "get_velocity":
-            if len(args) != 1:
-                help(name)
-                return
-
-            val = self.s.get_appendage(name).get_velocity()
-            print("{}: {}".format(name, val))
+            self.s.get_appendage(name).set_position(Angle(val, Angle.degree))
 
         elif args[0] == "get_position":
             if len(args) != 1:
@@ -52,7 +46,7 @@ class PositionControlledMotor:
                 return
 
             val = self.s.get_appendage(name).get_position()
-            print("{}: {}".format(name, val))
+            print("{}: {}".format(name, val.base_value))
 
         elif args[0] == "stop":
             if len(args) != 1:
