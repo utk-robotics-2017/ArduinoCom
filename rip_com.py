@@ -70,12 +70,12 @@ class rip_com(Cmd):
             self.help_connect()
             return
 
-        for aurduinoName in args:
+        for arduinoName in args:
             if arduinoName not in self.connectedDevices:
                 print("Arduino \"{}\" is not available.".format(arduinoName))
                 return
 
-        self.gs = get_spine(devices=[args])
+        self.gs = get_spine(devices=args)
         self.s = self.gs.__enter__()
         self.appendages = self.s.get_appendage_dict()
 
