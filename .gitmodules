@@ -1,3 +1,6 @@
 [submodule "rip"]
 	path = rip
 	url = git@github.com:utk-robotics-2017/rip.git
+[submodule "appendages"]
+	path = appendages
+	url = https://github.com/utk-robotics-2017/appendages.git
