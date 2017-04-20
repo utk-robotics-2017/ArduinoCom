@@ -15,13 +15,16 @@ from rip.head.spine.core import get_spine
 rc_dict = {}
 
 # RipCom-specific things.
-current_search_path = os.path.dirname(os.path.realpath(__file__)) + "/appendages"
-current_import_path = "appendages"
+current_search_path = os.path.dirname(os.path.realpath(__file__)) + "/appendages/rip"
+current_import_path = "appendages.rip"
 file_list = []
 for f in os.listdir(current_search_path):
-    if os.path.isfile(current_search_path + "/" + f) and f[-3:] == ".py" and not f == "__init__.py" and not f == "units.py":
+    if os.path.isfile(current_search_path + "/" + f) and \
+            f[-3:] == ".py" and not f == "__init__.py" and \
+            not f == "units.py":
         file_list.append(f)
 for f in file_list:
+    # print("Loading appendage: " + str(f))
     module = importlib.import_module("{0:s}.{1:s}".format(current_import_path, f[:-3]))
     class_name = f[:-3].replace('_', ' ').title().replace(' ', '')
     rc_dict[class_name] = getattr(module, class_name)
