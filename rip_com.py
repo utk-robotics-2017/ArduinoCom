@@ -62,7 +62,7 @@ class rip_com(Cmd):
         if len(self.lockedDevices) != 0:
             self.lockedDevices.sort()
 
-    def do_connect(self, parseResults):
+    def do_connect(self, parseResults: list)->None:
         self.refreshDevices()
 
         args = parseResults.parsed[1].split()
@@ -99,7 +99,7 @@ class rip_com(Cmd):
     def complete_connect(self, text, line, begidx, endidx):
         return [i for i in self.connectedDevices if i.startswith(text)]
 
-    def do_disconnect(self, parseResults):
+    def do_disconnect(self, parseResults: list)->None:
         if self.appendages is not None:
             for name in self.appendages:
                 del self.__dict__["do_" + name]
@@ -115,7 +115,7 @@ class rip_com(Cmd):
         print("usage: disconnect")
         print("Disconnects from a connected arduino.")
 
-    def do_list(self, parseResults):
+    def do_list(self, parseResults:list)->list:
         self.refreshDevices()
         self.print_topics("Connected Devices", self.connectedDevices, 15, 80)
         self.print_topics("Locked Devices", self.lockedDevices, 15, 80)
@@ -125,7 +125,7 @@ class rip_com(Cmd):
     def help_list(self):
         print("Lists the currently connected arduinos")
 
-    def do_rmlock(self, parseResults):
+    def do_rmlock(self, parseResults:list)-> None:
         self.refreshDevices()
         arduinoName = parseResults.parsed[1]
 
@@ -161,23 +161,23 @@ class rip_com(Cmd):
         print("usage: rmlock")
         print("       rmlock <device:str>")
 
-    def complete_rmlock(self, text, line, begidx, endidx):
+    def complete_rmlock(self, text:str, line:str, begidx:int, endidx:int)->int:
         return [i for i in self.lockedDevices if i.startswith(text)]
 
-    def do_exit(self, parseResults):
+    def do_exit(self, parseResults:list)->bool:
         self.do_disconnect(None)
         return True
 
     def help_exit(self):
         print("Disconnects from any connected arduinos, and exits ArduinoCom.")
 
-    def do_quit(self, parseResults):
+    def do_quit(self, parseResults:list)->bool:
         return self.do_exit(parseResults)
 
     def help_quit(self):
         print("Alias for exit")
 
-    def do_EOF(self, parseResults):
+    def do_EOF(self, parseResults:list)->bool:
         print()
         return self.do_exit(parseResults)
     do_eof = do_EOF
