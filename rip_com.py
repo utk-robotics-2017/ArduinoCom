@@ -115,7 +115,7 @@ class rip_com(Cmd):
         print("usage: disconnect")
         print("Disconnects from a connected arduino.")
 
-    def do_list(self, parseResults:list)->list:
+    def do_list(self, parseResults: list)->list:
         self.refreshDevices()
         self.print_topics("Connected Devices", self.connectedDevices, 15, 80)
         self.print_topics("Locked Devices", self.lockedDevices, 15, 80)
@@ -161,29 +161,27 @@ class rip_com(Cmd):
         print("usage: rmlock")
         print("       rmlock <device:str>")
 
-    def complete_rmlock(self, text:str, line:str, begidx:int, endidx:int)->int:
+    def complete_rmlock(self, text: str, line: str, begidx: int, endidx: int) ->int:
         return [i for i in self.lockedDevices if i.startswith(text)]
 
-    def do_exit(self, parseResults:list)->bool:
+    def do_exit(self, parseResults: list)->bool:
         self.do_disconnect(None)
         return True
 
     def help_exit(self):
         print("Disconnects from any connected arduinos, and exits ArduinoCom.")
-
-    def do_quit(self, parseResults:list)->bool:
+    def do_quit(self, parseResults: list)->bool:
         return self.do_exit(parseResults)
-
-    def help_quit(self):
+        asd
+    def help_quit(self):a
         print("Alias for exit")
-
     def do_EOF(self, parseResults:list)->bool:
         print()
         return self.do_exit(parseResults)
     do_eof = do_EOF
 
     def help_help(self):
-        print("Prints help for commands")
+        print("Prints help for commands")sads
 
     def get_names(self):
         names = dir(self)
