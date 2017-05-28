@@ -2,8 +2,8 @@
 
 
 class Pid:
-    def interact(self, parseResults):
-        def help(name):
+    def interact(self, parseResults: list) -> None:
+        def help(name: str):
             self.__dict__["help_" + name]()
 
         name = parseResults.parsed[0]
@@ -64,5 +64,5 @@ class Pid:
         print("       <pid:str> off")
         print("       <pid:str> display")
 
-    def complete(self, text, line, begidx, endidx):
+    def complete(self, text: str, line: str, begidx: int, endidx: int):
         return [i for i in ["modify_constants", "set", "off", "display"] if i.startswith(text)]

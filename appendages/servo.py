@@ -2,8 +2,8 @@
 
 
 class Servo:
-    def interact(self, parseResults):
-        def help(name):
+    def interact(self, parseResults: list) -> None:
+        def help(name: str):
             self.__dict__["help_" + name]()
 
         name = parseResults.parsed[0]
@@ -41,5 +41,5 @@ class Servo:
         print("")
         print("value: [0, 180]")
 
-    def complete(self, text, line, begidx, endidx):
+    def complete(self, text: str, line: str, begidx: int, endidx: int):
         return [i for i in ["set", "detach"] if i.startswith(text)]

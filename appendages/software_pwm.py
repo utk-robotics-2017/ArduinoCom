@@ -2,8 +2,8 @@
 
 
 class SoftwarePwm:
-    def interact(self, parseResults):
-        def help(name):
+    def interact(self, parseResults: list) -> None:
+        def help(name: str) -> None:
             self.__dict__["help_" + name]()
 
         name = parseResults.parsed[0]
@@ -30,5 +30,5 @@ class SoftwarePwm:
     def help(self):
         print("usage: <stepper:str> set_pwm <value:int>")
 
-    def complete(self, text, line, begidx, endidx):
+    def complete(self, text: str, line: str, begidx: int, endidx: int) -> list:
         return [i for i in ["set_pwm"] if i.startswith(text)]
