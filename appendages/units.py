@@ -2,71 +2,71 @@ import math
 
 
 class Unit:
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         self.base_value = value * unit
 
-    def to(self, unit):
+    def to(self, unit: float) -> float:
         return self.base_value / unit
 
-    def __add__(self, other):
+    def __add__(self, other: object) -> object:
         return Unit(self.base_value + other.base_value, 1)
 
-    def __sub__(self, other):
+    def __sub__(self, other: object) -> object:
         return Unit(self.base_value - other.base_value, 1)
 
-    def __mul__(self, other):
+    def __mul__(self, other: object) -> object:
         return Unit(self.base_value * other.base_value, 1)
 
-    def __truediv__(self, other):
+    def __truediv__(self, other: object) -> object:
         return Unit(self.base_value / other.base_value, 1)
 
-    def __iadd__(self, other):
+    def __iadd__(self, other: object) -> object:
         return Unit(self.base_value + other.base_value, 1)
 
-    def __isub__(self, other):
+    def __isub__(self, other: object) -> object:
         return Unit(self.base_value - other.base_value, 1)
 
-    def __imul__(self, other):
+    def __imul__(self, other: object) -> object:
         return Unit(self.base_value * other.base_value, 1)
 
-    def __itruediv__(self, other):
-        return Unit(self.base_value / other.base_value)
+    def __itruediv__(self, other: object) -> object:
+        return Unit(self.base_value / other.base_value, 1)
 
-    def __neg__(self):
+    def __neg__(self) -> object:
         return Unit(-1 * self.base_value, 1)
 
-    def __pos__(self):
+    def __pos__(self) -> object:
         return Unit(self.base_value, 1)
 
-    def __abs__(self):
+    def __abs__(self) -> object:
         return Unit(abs(self.base_value), 1)
 
-    def __lt__(self, other):
+    def __lt__(self, other: object) -> bool:
         return self.base_value < other.base_value
 
-    def __le__(self, other):
+    def __le__(self, other: object) -> bool:
         return self.base_value <= other.base_value
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return self.base_value == other.base_value
 
-    def __ne__(self, other):
+    def __ne__(self, other: object) -> bool:
         return self.base_value != other.base_value
 
-    def __gt__(self, other):
+    def __gt__(self, other: object) -> bool:
         return self.base_value > other.base_value
 
-    def __ge__(self, other):
+    def __ge__(self, other: object) -> bool:
         return self.base_value >= other.base_value
 
 
 class Constant(Unit):
-    def __init__(self, value):
+    def __init__(self, value: float) -> None:
         Unit.__init__(self, value, 1.0)
 
 
 class Length(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit) -> None:
         Unit.__init__(self, value, unit)
     m = 1.0
     mm = m * .001
@@ -81,7 +81,7 @@ Distance = Length
 
 
 class Angle(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     degree = 1.0
     radian = degree * 180.0 / math.pi
@@ -91,7 +91,7 @@ class Angle(Unit):
 
 
 class Time(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     s = 1.0
     ms = s * .001
@@ -100,7 +100,7 @@ class Time(Unit):
 
 
 class Velocity(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     m_s = Length.m / Time.s
     m_minute = Length.m / Time.minute
@@ -122,7 +122,7 @@ Speed = Velocity
 
 
 class AngularVelocity(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     rpm = Angle.rev / Time.s
     rps = Angle.rev / Time.s
@@ -131,7 +131,7 @@ class AngularVelocity(Unit):
 
 
 class Acceleration(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     m_s2 = Length.m / Time.s ** 2
     m_minute2 = Length.m / Time.minute ** 2
@@ -153,7 +153,7 @@ class Acceleration(Unit):
 
 
 class Force(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     N = 1
     oz = N * 3.59694309
@@ -161,7 +161,7 @@ class Force(Unit):
 
 
 class Pressue(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     Pa = Force.N / (Distance.m ** 2)
     kPa = Pa * 1000
@@ -171,26 +171,26 @@ class Pressue(Unit):
 
 
 class Torque(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     Nm = Force.N * Distance.m
     ozinch = Force.oz * Distance.inch
 
 
 class Current(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     A = 1
 
 
 class Voltage(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         Unit.__init__(self, value, unit)
     v = 1
 
 
 class Temperature(Unit):
-    def __init__(self, value, unit):
+    def __init__(self, value: float, unit: float) -> None:
         if unit == self.C:
             self.base_value = value
         elif unit == self.K:
@@ -198,7 +198,7 @@ class Temperature(Unit):
         elif unit == self.F:
             self.base_value = (value - 32) * (5 / 9)
 
-    def to(self, unit):
+    def to(self, unit: float) -> float:
         if unit == self.C:
             return self.base_value
         elif unit == self.K:
