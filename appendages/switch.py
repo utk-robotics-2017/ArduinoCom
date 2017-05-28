@@ -2,8 +2,8 @@ import time
 
 
 class Switch:
-    def interact(self, parseResults):
-        def help(name):
+    def interact(self, parseResults: list) -> None:
+        def help(name: str) -> None:
             self.__dict__["help_" + name]()
 
         name = parseResults.parsed[0]
@@ -36,11 +36,11 @@ class Switch:
         else:
             help(name)
 
-    def help(self):
+    def help(self) -> None:
         print("usage: <switch:str> read")
         print("       <switch:str> read_until_change")
         print("")
         print("value: [-1023, 1023]")
 
-    def complete(self, text, line, begidx, endidx):
+    def complete(self, text: str, line: str, begidx: int, endidx: int) -> list:
         return [i for i in ["read", "read_until_change"] if i.startswith(text)]
