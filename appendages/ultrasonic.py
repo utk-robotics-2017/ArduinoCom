@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-from .units import Length
+from units import Length
 
 
 class Ultrasonic:
-    def interact(self, parseResults):
-        def help(name):
+    def interact(self, parseResults: list) -> None:
+        def help(name: str) -> None:
             self.__dict__["help_" + name]()
 
         name = parseResults.parsed[0]
@@ -38,9 +38,9 @@ class Ultrasonic:
         else:
             help(name)
 
-    def help(self):
+    def help(self) -> None:
         print("usage: <ultrasonic:str> set_distance <distance:float>")
         print("       <ultrasonic:str> read")
 
-    def complete(self, text, line, begidx, endidx):
+    def complete(self, text: str, line: str, begidx: int, endidx: int) -> list:
         return [i for i in ["set_distance", "read"] if i.startswith(text)]
